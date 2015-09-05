@@ -22,11 +22,11 @@ import timber.log.Timber;
  * <p/>
  * Created by parker on 9/4/15.
  */
-public class SectionViewerAdapter extends NdBaseRecyclerAdapter<Section, SectionViewerAdapter.SectionViewHolder> {
+public class SectionContentViewerAdapter extends NdBaseRecyclerAdapter<Section, SectionContentViewerAdapter.SectionViewHolder> {
 
     private SparseArray<Spanned> mSpanCache;
 
-    public SectionViewerAdapter(Context context) {
+    public SectionContentViewerAdapter(Context context) {
         super(context);
     }
 
