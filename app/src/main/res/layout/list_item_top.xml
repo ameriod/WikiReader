@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.nordeck.wiki.reader.views.ForegroundLinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                                                      xmlns:tools="http://schemas.android.com/tools"
+                                                      android:layout_width="match_parent"
+                                                      android:layout_height="wrap_content"
+                                                      android:padding="@dimen/padding"
+                                                      android:foreground="?attr/selectableItemBackground"
+                                                      android:gravity="center"
+                                                      android:minHeight="@dimen/default_touch_target"
+                                                      android:orientation="vertical">
+
+    <TextView
+        android:id="@+id/list_item_top_tv_name"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:textAppearance="@style/TextAppearance.AppCompat.Title"
+        tools:text="Test Top Article Name"/>
+</com.nordeck.wiki.reader.views.ForegroundLinearLayout>
