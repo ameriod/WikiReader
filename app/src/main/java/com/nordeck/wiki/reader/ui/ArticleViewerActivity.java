@@ -11,7 +11,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.View;
 
 import com.nordeck.wiki.reader.R;
-import com.nordeck.wiki.reader.adapters.SectionContentViewerAdapter;
+import com.nordeck.wiki.reader.adapters.ContentViewerAdapter;
 import com.nordeck.wiki.reader.adapters.SectionNavAdapter;
 import com.nordeck.wiki.reader.adapters.base.NdDividerItemDecoration;
 import com.nordeck.wiki.reader.adapters.base.RecyclerItemClickSupport;
@@ -39,7 +39,7 @@ public class ArticleViewerActivity extends BaseActivity implements IArticleViewe
 
     private ArticleViewerPresenter mPresenter;
     private String mId;
-    private SectionContentViewerAdapter mAdapter;
+    private ContentViewerAdapter mContentAdapter;
     private LinearLayoutManager mContentLayoutManager;
     private SectionNavAdapter mNavAdapter;
     private LinearLayoutManager mNavLayoutManager;
@@ -62,8 +62,8 @@ public class ArticleViewerActivity extends BaseActivity implements IArticleViewe
         mContentLayoutManager.setOrientation(LinearLayoutManager.VERTICAL);
         // The content adapter
         mRecyclerView.setLayoutManager(mContentLayoutManager);
-        mAdapter = new SectionContentViewerAdapter(this);
-        mRecyclerView.setAdapter(mAdapter);
+        mContentAdapter = new ContentViewerAdapter(this);
+        mRecyclerView.setAdapter(mContentAdapter);
         // Section nav adapter
         mNavLayoutManager = new LinearLayoutManager(getApplicationContext());
         mNavLayoutManager.setOrientation(LinearLayoutManager.VERTICAL);
@@ -116,7 +116,7 @@ public class ArticleViewerActivity extends BaseActivity implements IArticleViewe
 
     @Override
     public void onArticleFetched(@NonNull ArticleResponse article) {
-        mAdapter.addAll(article.getSections(), true);
+        mContentAdapter.addAll(article.getSections(), true);
         mNavAdapter.addAll(article.getSections(), true);
     }
 

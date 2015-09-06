@@ -25,4 +25,19 @@
         android:paddingTop="@dimen/padding_small"
         android:textAppearance="@style/TextAppearance.AppCompat.Body1"
         tools:text="Blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah"/>
+
+    <HorizontalScrollView
+        android:layout_marginTop="@dimen/padding"
+        android:id="@+id/list_item_article_section_hs_images"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <LinearLayout
+            android:id="@+id/list_item_article_section_container_images"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:orientation="horizontal"/>
+
+    </HorizontalScrollView>
 </LinearLayout>
