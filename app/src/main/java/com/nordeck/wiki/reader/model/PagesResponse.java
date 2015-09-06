@@ -11,6 +11,8 @@ import com.google.gson.JsonDeserializer;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParseException;
+import com.google.gson.annotations.Expose;
+import com.google.gson.annotations.SerializedName;
 
 import java.lang.reflect.Type;
 import java.util.ArrayList;
@@ -18,38 +20,46 @@ import java.util.List;
 import java.util.Map;
 
 /**
+ * For the {@link com.nordeck.wiki.reader.api.RelatedArticleService}:
+ * <p/>
  * Not Gson based since the response's list is an objects keys are dynamic based on the id we are looking at. Use
- * {@link com.nordeck.wiki.reader.model.RelatedPagesResponse.Deserializer} to convert the response
+ * {@link PagesResponse.Deserializer} to convert the response
+ * <p/>
+ * {@link com.nordeck.wiki.reader.api.TopArticlesService} Gson based response
  * <p/>
  * Created by parker on 9/5/15.
  */
-public class RelatedPagesResponse implements Parcelable {
+public class PagesResponse implements Parcelable {
+    @Expose
+    @SerializedName("items")
     private List<Page> pages;
+    @Expose
+    @SerializedName("basepath")
     private String basePath;
 
-    private RelatedPagesResponse(List<Page> pages, String basePath) {
+    private PagesResponse(List<Page> pages, String basePath) {
         this.pages = pages;
         this.basePath = basePath;
     }
 
-    protected RelatedPagesResponse(Parcel in) {
+    protected PagesResponse(Parcel in) {
         pages = in.createTypedArrayList(Page.CREATOR);
         basePath = in.readString();
     }
 
-    public static final Creator<RelatedPagesResponse> CREATOR = new Creator<RelatedPagesResponse>() {
+    public static final Creator<PagesResponse> CREATOR = new Creator<PagesResponse>() {
         @Override
-        public RelatedPagesResponse createFromParcel(Parcel in) {
-            return new RelatedPagesResponse(in);
+        public PagesResponse createFromParcel(Parcel in) {
+            return new PagesResponse(in);
         }
 
         @Override
-        public RelatedPagesResponse[] newArray(int size) {
-            return new RelatedPagesResponse[size];
+        public PagesResponse[] newArray(int size) {
+            return new PagesResponse[size];
         }
     };
 
-    public List<Page> getPages() {
+    public List<Page> getItems() {
         return pages;
     }
 
@@ -73,7 +83,7 @@ public class RelatedPagesResponse implements Parcelable {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
 
-        RelatedPagesResponse that = (RelatedPagesResponse) o;
+        PagesResponse that = (PagesResponse) o;
 
         if (pages != null ? !pages.equals(that.pages) : that.pages != null) return false;
         return !(basePath != null ? !basePath.equals(that.basePath) : that.basePath != null);
@@ -98,13 +108,13 @@ public class RelatedPagesResponse implements Parcelable {
     /**
      * Converts the server response into one we can actually use
      */
-    public static class Deserializer implements JsonDeserializer<RelatedPagesResponse> {
+    public static class Deserializer implements JsonDeserializer<PagesResponse> {
 
         public Deserializer() {
         }
 
         @Override
-        public RelatedPagesResponse deserialize(JsonElement json, Type typeOfT, JsonDeserializationContext context)
+        public PagesResponse deserialize(JsonElement json, Type typeOfT, JsonDeserializationContext context)
                 throws JsonParseException {
             JsonObject obj = json.getAsJsonObject();
             String basePath = obj.getAsJsonPrimitive("basepath").getAsString();
@@ -119,7 +129,7 @@ public class RelatedPagesResponse implements Parcelable {
                     pages.add(gson.fromJson(pagesArray.get(i), Page.class));
                 }
             }
-            return new RelatedPagesResponse(pages, basePath);
+            return new PagesResponse(pages, basePath);
         }
     }
 }

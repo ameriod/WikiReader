@@ -2,7 +2,7 @@ package com.nordeck.wiki.reader.ui;
 
 import android.support.annotation.NonNull;
 
-import com.nordeck.wiki.reader.model.TopArticlesResponse;
+import com.nordeck.wiki.reader.model.PagesResponse;
 import com.nordeck.wiki.reader.presenters.NdView;
 
 /**
@@ -10,5 +10,5 @@ import com.nordeck.wiki.reader.presenters.NdView;
  */
 public interface ITopArticlesView extends NdView {
 
-    void onTopArticlesFetched(@NonNull TopArticlesResponse response);
+    void onTopArticlesFetched(@NonNull PagesResponse response);
 }

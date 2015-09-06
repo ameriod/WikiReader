@@ -20,7 +20,7 @@ import com.nordeck.wiki.reader.adapters.base.NdBaseRecyclerAdapter;
 import com.nordeck.wiki.reader.model.ISection;
 import com.nordeck.wiki.reader.model.Image;
 import com.nordeck.wiki.reader.model.Page;
-import com.nordeck.wiki.reader.model.RelatedPagesResponse;
+import com.nordeck.wiki.reader.model.PagesResponse;
 import com.nordeck.wiki.reader.model.Section;
 import com.nordeck.wiki.reader.views.HtmlTagHandler;
 import com.squareup.picasso.Picasso;
@@ -45,7 +45,7 @@ public class ContentViewerAdapter extends NdBaseRecyclerAdapter<ISection, Recycl
     private static final int TYPE_SECTION = 0;
     private static final int TYPE_RELATED = 1;
 
-    private RelatedPagesResponse mRelatedResponse;
+    private PagesResponse mRelatedResponse;
 
     private SparseArray<Spanned> mSpanCache;
 
@@ -130,13 +130,13 @@ public class ContentViewerAdapter extends NdBaseRecyclerAdapter<ISection, Recycl
         addRelatedArticles(mRelatedResponse);
     }
 
-    public void addRelatedArticles(@Nullable RelatedPagesResponse response) {
+    public void addRelatedArticles(@Nullable PagesResponse response) {
         mRelatedResponse = response;
-        if (response != null && response.getPages() != null && response.getPages().size() > 0) {
+        if (response != null && response.getItems() != null && response.getItems().size() > 0) {
             List<ISection> relatedSections = new ArrayList<>();
             ISection sectionTitle = Section.newInstance(context.getString(R.string.article_viewer_related));
             relatedSections.add(sectionTitle);
-            relatedSections.addAll(response.getPages());
+            relatedSections.addAll(response.getItems());
             int currentCount = getItemCount();
             for (int i = 0, size = relatedSections.size(); i < size; i++) {
                 ISection section = relatedSections.get(i);

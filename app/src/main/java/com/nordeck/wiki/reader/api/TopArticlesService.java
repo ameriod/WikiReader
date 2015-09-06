@@ -1,6 +1,6 @@
 package com.nordeck.wiki.reader.api;
 
-import com.nordeck.wiki.reader.model.TopArticlesResponse;
+import com.nordeck.wiki.reader.model.PagesResponse;
 
 import retrofit.RestAdapter;
 import retrofit.http.GET;
@@ -27,11 +27,11 @@ public class TopArticlesService extends BaseService {
     private interface TopWebService {
 
         @GET("/api/v1/Articles/Top/AsSimpleJson")
-        Observable<TopArticlesResponse> fetchTopArticles();
+        Observable<PagesResponse> fetchTopArticles();
     }
 
 
-    public Observable<TopArticlesResponse> getTopArticles() {
+    public Observable<PagesResponse> getTopArticles() {
         return makeAsync(mWebService.fetchTopArticles());
     }
 }

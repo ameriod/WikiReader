@@ -19,7 +19,7 @@ import com.nordeck.wiki.reader.adapters.base.RecyclerItemClickSupport;
 import com.nordeck.wiki.reader.model.ArticleResponse;
 import com.nordeck.wiki.reader.model.ISection;
 import com.nordeck.wiki.reader.model.Page;
-import com.nordeck.wiki.reader.model.RelatedPagesResponse;
+import com.nordeck.wiki.reader.model.PagesResponse;
 import com.nordeck.wiki.reader.presenters.ArticleViewerPresenter;
 
 import java.util.ArrayList;
@@ -136,7 +136,7 @@ public class ArticleViewerActivity extends BaseActivity implements IArticleViewe
     }
 
     @Override
-    public void onRelatedArticlesFetched(@NonNull RelatedPagesResponse relatedPages) {
+    public void onRelatedArticlesFetched(@NonNull PagesResponse relatedPages) {
         mContentAdapter.addRelatedArticles(relatedPages);
         mNavAdapter.addRelatedArticles(relatedPages);
     }

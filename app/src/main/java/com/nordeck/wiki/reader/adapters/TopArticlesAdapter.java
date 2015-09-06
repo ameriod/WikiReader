@@ -7,13 +7,13 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.nordeck.wiki.reader.R;
-import com.nordeck.wiki.reader.model.TopArticle;
 import com.nordeck.wiki.reader.adapters.base.NdBaseRecyclerAdapter;
+import com.nordeck.wiki.reader.model.Page;
 
 /**
  * Created by parker on 9/4/15.
  */
-public class TopArticlesAdapter extends NdBaseRecyclerAdapter<TopArticle, TopArticlesAdapter.ItemViewHolder> {
+public class TopArticlesAdapter extends NdBaseRecyclerAdapter<Page, TopArticlesAdapter.ItemViewHolder> {
     public TopArticlesAdapter(Context context) {
         super(context);
     }

@@ -1,6 +1,5 @@
 package com.nordeck.wiki.reader.ui;
 
-import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.LinearLayoutManager;
@@ -9,8 +8,8 @@ import android.view.View;
 
 import com.nordeck.wiki.reader.R;
 import com.nordeck.wiki.reader.adapters.TopArticlesAdapter;
-import com.nordeck.wiki.reader.model.TopArticle;
-import com.nordeck.wiki.reader.model.TopArticlesResponse;
+import com.nordeck.wiki.reader.model.Page;
+import com.nordeck.wiki.reader.model.PagesResponse;
 import com.nordeck.wiki.reader.presenters.TopArticlesPresenter;
 import com.nordeck.wiki.reader.adapters.base.NdDividerItemDecoration;
 import com.nordeck.wiki.reader.adapters.base.RecyclerItemClickSupport;
@@ -69,7 +68,7 @@ public class TopActivity extends BaseActivity implements ITopArticlesView, Recyc
     }
 
     @Override
-    public void onTopArticlesFetched(TopArticlesResponse response) {
+    public void onTopArticlesFetched(PagesResponse response) {
         mAdapter.addAll(response.getItems(), true);
     }
 
@@ -85,7 +84,7 @@ public class TopActivity extends BaseActivity implements ITopArticlesView, Recyc
 
     @Override
     public boolean onItemClick(RecyclerView parent, View view, int position, long id) {
-        TopArticle article = mAdapter.getItem(position);
+        Page article = mAdapter.getItem(position);
         ArticleViewerActivity.launchActivity(this, article.getId());
         return true;
     }
