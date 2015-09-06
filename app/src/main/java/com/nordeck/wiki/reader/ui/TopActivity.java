@@ -7,12 +7,16 @@ import android.support.v7.widget.RecyclerView;
 import android.view.View;
 
 import com.nordeck.wiki.reader.R;
-import com.nordeck.wiki.reader.adapters.TopArticlesAdapter;
-import com.nordeck.wiki.reader.model.Page;
+import com.nordeck.wiki.reader.adapters.PageDetailAdapter;
+import com.nordeck.wiki.reader.model.IPage;
+import com.nordeck.wiki.reader.model.PageRelated;
 import com.nordeck.wiki.reader.model.PagesResponse;
+import com.nordeck.wiki.reader.model.RelatedResponse;
 import com.nordeck.wiki.reader.presenters.TopArticlesPresenter;
 import com.nordeck.wiki.reader.adapters.base.NdDividerItemDecoration;
 import com.nordeck.wiki.reader.adapters.base.RecyclerItemClickSupport;
+
+import java.util.ArrayList;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
@@ -24,7 +28,7 @@ public class TopActivity extends BaseActivity implements ITopArticlesView, Recyc
 
     @Bind(R.id.recycler_view)
     RecyclerView mRecyclerView;
-    private TopArticlesAdapter mAdapter;
+    private PageDetailAdapter mAdapter;
 
     private TopArticlesPresenter mPresenter;
 
@@ -39,7 +43,7 @@ public class TopActivity extends BaseActivity implements ITopArticlesView, Recyc
         mRecyclerView.setLayoutManager(linearLayoutManager);
         mRecyclerView.addItemDecoration(new NdDividerItemDecoration(this, NdDividerItemDecoration.VERTICAL_LIST));
         RecyclerItemClickSupport.addTo(mRecyclerView).setOnItemClickListener(this);
-        mAdapter = new TopArticlesAdapter(this);
+        mAdapter = new PageDetailAdapter(this);
         mRecyclerView.setAdapter(mAdapter);
 
         mPresenter = new TopArticlesPresenter();
@@ -69,7 +73,7 @@ public class TopActivity extends BaseActivity implements ITopArticlesView, Recyc
 
     @Override
     public void onTopArticlesFetched(PagesResponse response) {
-        mAdapter.addAll(response.getItems(), true);
+        mAdapter.addAll(new ArrayList<IPage>(response.getItems()), true);
     }
 
     @Override
@@ -84,7 +88,7 @@ public class TopActivity extends BaseActivity implements ITopArticlesView, Recyc
 
     @Override
     public boolean onItemClick(RecyclerView parent, View view, int position, long id) {
-        Page article = mAdapter.getItem(position);
+        IPage article = mAdapter.getItem(position);
         ArticleViewerActivity.launchActivity(this, article.getId());
         return true;
     }

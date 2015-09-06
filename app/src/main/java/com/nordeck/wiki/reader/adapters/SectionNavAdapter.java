@@ -11,7 +11,7 @@ import android.widget.TextView;
 import com.nordeck.wiki.reader.R;
 import com.nordeck.wiki.reader.adapters.base.NdBaseRecyclerAdapter;
 import com.nordeck.wiki.reader.model.ISection;
-import com.nordeck.wiki.reader.model.PagesResponse;
+import com.nordeck.wiki.reader.model.RelatedResponse;
 import com.nordeck.wiki.reader.model.Section;
 
 import java.util.List;
@@ -22,7 +22,7 @@ import java.util.List;
 public class SectionNavAdapter extends NdBaseRecyclerAdapter<ISection, SectionNavAdapter.SectionNavHolder> {
     private int mCurrentPosition;
 
-    private PagesResponse relatedResponse;
+    private RelatedResponse relatedResponse;
 
     public SectionNavAdapter(Context context) {
         super(context);
@@ -62,7 +62,7 @@ public class SectionNavAdapter extends NdBaseRecyclerAdapter<ISection, SectionNa
         }
     }
 
-    public void addRelatedArticles(@Nullable PagesResponse relatedResponse) {
+    public void addRelatedArticles(@Nullable RelatedResponse relatedResponse) {
         this.relatedResponse = relatedResponse;
         if (relatedResponse != null && relatedResponse.getItems() != null && relatedResponse.getItems().size() > 0) {
             ISection section = Section.newInstance(context.getString(R.string.article_viewer_related));

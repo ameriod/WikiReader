@@ -16,11 +16,13 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.nordeck.wiki.reader.R;
+import com.nordeck.wiki.reader.Utils;
 import com.nordeck.wiki.reader.adapters.base.NdBaseRecyclerAdapter;
+import com.nordeck.wiki.reader.model.IPage;
 import com.nordeck.wiki.reader.model.ISection;
 import com.nordeck.wiki.reader.model.Image;
-import com.nordeck.wiki.reader.model.Page;
-import com.nordeck.wiki.reader.model.PagesResponse;
+import com.nordeck.wiki.reader.model.PageRelated;
+import com.nordeck.wiki.reader.model.RelatedResponse;
 import com.nordeck.wiki.reader.model.Section;
 import com.nordeck.wiki.reader.views.HtmlTagHandler;
 import com.squareup.picasso.Picasso;
@@ -37,7 +39,7 @@ public class ContentViewerAdapter extends NdBaseRecyclerAdapter<ISection, Recycl
         implements View.OnClickListener {
 
     public interface OnClickRelatedArticleListener {
-        void onClickArticle(Page page);
+        void onClickArticle(IPage page);
     }
 
     private OnClickRelatedArticleListener mArticleListener;
@@ -45,7 +47,7 @@ public class ContentViewerAdapter extends NdBaseRecyclerAdapter<ISection, Recycl
     private static final int TYPE_SECTION = 0;
     private static final int TYPE_RELATED = 1;
 
-    private PagesResponse mRelatedResponse;
+    private RelatedResponse mRelatedResponse;
 
     private SparseArray<Spanned> mSpanCache;
 
@@ -57,7 +59,7 @@ public class ContentViewerAdapter extends NdBaseRecyclerAdapter<ISection, Recycl
     @Override
     public int getItemViewType(int position) {
         ISection section = getItem(position);
-        if (section instanceof Page) {
+        if (section instanceof PageRelated) {
             return TYPE_RELATED;
         }
         return TYPE_SECTION;
@@ -66,7 +68,7 @@ public class ContentViewerAdapter extends NdBaseRecyclerAdapter<ISection, Recycl
     @Override
     public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         if (viewType == TYPE_RELATED) {
-            return new RelatedViewHolder(inflater.inflate(R.layout.list_item_related_article, parent, false));
+            return new PageDetailViewHolder(inflater.inflate(R.layout.list_item_related_article, parent, false));
         }
         return new SectionViewHolder(inflater.inflate(R.layout.list_item_article_section, parent, false));
     }
@@ -83,42 +85,35 @@ public class ContentViewerAdapter extends NdBaseRecyclerAdapter<ISection, Recycl
 
             sectionHolder.tvTitle.setText(item.getTitle());
             // Some sections do not have titles
-            showView(sectionHolder.tvTitle, !TextUtils.isEmpty(item.getTitle()));
+            Utils.setViewVisibility(sectionHolder.tvTitle, !TextUtils.isEmpty(item.getTitle()));
             if (item.isContentTitle()) {
                 // no content so hide the tv
-                showView(sectionHolder.tvContent, false);
+                Utils.setViewVisibility(sectionHolder.tvContent, false);
             } else if (item.isContentParagraph()) {
                 sectionHolder.tvContent.setText(item.getParagraphStr());
-                showView(sectionHolder.tvContent, true);
+                Utils.setViewVisibility(sectionHolder.tvContent, true);
             } else if (item.isContentList()) {
                 sectionHolder.tvContent.setText(getSpan(position, item.getListStr()));
-                showView(sectionHolder.tvContent, true);
+                Utils.setViewVisibility(sectionHolder.tvContent, true);
             } else {
-                showView(sectionHolder.tvContent, false);
+                Utils.setViewVisibility(sectionHolder.tvContent, false);
                 Timber.e("Unsupported content type section: " + item);
             }
 
             if (item.getImages() != null && item.getImages().size() > 0) {
                 addImagesToView(sectionHolder.containerImages, item.getImages());
-                showView(sectionHolder.hsImages, true);
-                showView(sectionHolder.containerImages, true);
+                Utils.setViewVisibility(sectionHolder.hsImages, true);
+                Utils.setViewVisibility(sectionHolder.containerImages, true);
             } else {
-                showView(sectionHolder.containerImages, false);
-                showView(sectionHolder.hsImages, false);
+                Utils.setViewVisibility(sectionHolder.containerImages, false);
+                Utils.setViewVisibility(sectionHolder.hsImages, false);
             }
         } else if (viewType == TYPE_RELATED) {
-            Page page = (Page) iSection;
-            RelatedViewHolder relatedHolder = (RelatedViewHolder) holder;
-            relatedHolder.tvTitle.setText(page.getTitle());
-            relatedHolder.tvSummary.setText(page.getText());
-            if (TextUtils.isEmpty(page.getImgUrl())) {
-                showView(relatedHolder.iv, false);
-            } else {
-                showView(relatedHolder.iv, true);
-                Picasso.with(context.getApplicationContext()).load(page.getImgUrl()).into(relatedHolder.iv);
-            }
-            relatedHolder.itemView.setTag(page);
-            relatedHolder.itemView.setOnClickListener(this);
+            IPage page = (IPage) iSection;
+            PageDetailViewHolder holderPage = (PageDetailViewHolder) holder;
+            holderPage.setupPage(page, context.getApplicationContext());
+            holderPage.itemView.setTag(page);
+            holderPage.itemView.setOnClickListener(this);
         }
 
     }
@@ -130,7 +125,7 @@ public class ContentViewerAdapter extends NdBaseRecyclerAdapter<ISection, Recycl
         addRelatedArticles(mRelatedResponse);
     }
 
-    public void addRelatedArticles(@Nullable PagesResponse response) {
+    public void addRelatedArticles(@Nullable RelatedResponse response) {
         mRelatedResponse = response;
         if (response != null && response.getItems() != null && response.getItems().size() > 0) {
             List<ISection> relatedSections = new ArrayList<>();
@@ -181,28 +176,6 @@ public class ContentViewerAdapter extends NdBaseRecyclerAdapter<ISection, Recycl
         }
     }
 
-    private class RelatedViewHolder extends RecyclerView.ViewHolder {
-        ImageView iv;
-        TextView tvTitle;
-        TextView tvSummary;
-
-        public RelatedViewHolder(View itemView) {
-            super(itemView);
-            iv = (ImageView) itemView.findViewById(R.id.list_item_related_article_iv);
-            tvTitle = (TextView) itemView.findViewById(R.id.list_item_related_article_tv_title);
-            tvSummary = (TextView) itemView.findViewById(R.id.list_item_related_article_tv_summary);
-        }
-
-    }
-
-    private void showView(View v, boolean show) {
-        if (show) {
-            v.setVisibility(View.VISIBLE);
-        } else {
-            v.setVisibility(View.GONE);
-        }
-    }
-
     private void addImagesToView(LinearLayout container, List<Image> imageList) {
         // check to make sure there are enough image views to display in
         int containerCount = container.getChildCount();
@@ -218,7 +191,7 @@ public class ContentViewerAdapter extends NdBaseRecyclerAdapter<ISection, Recycl
             diff = Math.abs(diff);
             for (int i = diff; i <= 0; i--) {
                 View v = container.getChildAt(i);
-                showView(v, false);
+                Utils.setViewVisibility(v, false);
             }
         }
         for (int i = 0; i < imagesSize; i++) {
@@ -233,7 +206,7 @@ public class ContentViewerAdapter extends NdBaseRecyclerAdapter<ISection, Recycl
             iv.setTag(image.getCaption());
             iv.setOnClickListener(this);
             Picasso.with(context.getApplicationContext()).load(image.getSrc()).into(iv);
-            showView(iv, true);
+            Utils.setViewVisibility(iv, true);
         }
     }
 
@@ -249,8 +222,8 @@ public class ContentViewerAdapter extends NdBaseRecyclerAdapter<ISection, Recycl
             if (!TextUtils.isEmpty(caption)) {
                 Toast.makeText(context.getApplicationContext(), caption, Toast.LENGTH_SHORT).show();
             }
-        } else if (v.getTag() instanceof Page) {
-            Page page = (Page) v.getTag();
+        } else if (v.getTag() instanceof PageRelated) {
+            IPage page = (PageRelated) v.getTag();
             mArticleListener.onClickArticle(page);
         }
     }

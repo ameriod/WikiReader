@@ -17,9 +17,10 @@ import com.nordeck.wiki.reader.adapters.SectionNavAdapter;
 import com.nordeck.wiki.reader.adapters.base.NdDividerItemDecoration;
 import com.nordeck.wiki.reader.adapters.base.RecyclerItemClickSupport;
 import com.nordeck.wiki.reader.model.ArticleResponse;
+import com.nordeck.wiki.reader.model.IPage;
 import com.nordeck.wiki.reader.model.ISection;
-import com.nordeck.wiki.reader.model.Page;
-import com.nordeck.wiki.reader.model.PagesResponse;
+import com.nordeck.wiki.reader.model.PageRelated;
+import com.nordeck.wiki.reader.model.RelatedResponse;
 import com.nordeck.wiki.reader.presenters.ArticleViewerPresenter;
 
 import java.util.ArrayList;
@@ -136,7 +137,7 @@ public class ArticleViewerActivity extends BaseActivity implements IArticleViewe
     }
 
     @Override
-    public void onRelatedArticlesFetched(@NonNull PagesResponse relatedPages) {
+    public void onRelatedArticlesFetched(@NonNull RelatedResponse relatedPages) {
         mContentAdapter.addRelatedArticles(relatedPages);
         mNavAdapter.addRelatedArticles(relatedPages);
     }
@@ -166,7 +167,7 @@ public class ArticleViewerActivity extends BaseActivity implements IArticleViewe
     }
 
     @Override
-    public void onClickArticle(Page page) {
+    public void onClickArticle(IPage page) {
         ArticleViewerActivity.launchActivity(this, page.getId());
     }
 

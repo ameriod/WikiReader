@@ -7,7 +7,7 @@ import android.support.annotation.Nullable;
 import com.nordeck.wiki.reader.api.ArticleService;
 import com.nordeck.wiki.reader.api.RelatedArticleService;
 import com.nordeck.wiki.reader.model.ArticleResponse;
-import com.nordeck.wiki.reader.model.PagesResponse;
+import com.nordeck.wiki.reader.model.RelatedResponse;
 import com.nordeck.wiki.reader.ui.IArticleViewerView;
 import com.nordeck.wiki.reader.ui.TopActivity;
 
@@ -20,7 +20,7 @@ import timber.log.Timber;
 public class ArticleViewerPresenter extends NdBasePresenter<IArticleViewerView> {
 
     private ArticleResponse mResponse;
-    private PagesResponse mRelatedResponse;
+    private RelatedResponse mRelatedResponse;
 
     private static final String OUT_STATE_ARTICLE_RESPONSE = "out_state_article_response";
     private static final String OUT_STATE_RELATED_RESPONSE = "out_state_related_response";
@@ -84,7 +84,7 @@ public class ArticleViewerPresenter extends NdBasePresenter<IArticleViewerView> 
         }
     }
 
-    private class RelatedSubscriber extends Subscriber<PagesResponse> {
+    private class RelatedSubscriber extends Subscriber<RelatedResponse> {
         @Override
         public void onCompleted() {
             Timber.d("onCompleted");
@@ -96,10 +96,10 @@ public class ArticleViewerPresenter extends NdBasePresenter<IArticleViewerView> 
         }
 
         @Override
-        public void onNext(PagesResponse relatedPagesResponse) {
+        public void onNext(RelatedResponse relatedRelatedResponse) {
             Timber.d("onNext");
-            mRelatedResponse = relatedPagesResponse;
-            getView().onRelatedArticlesFetched(relatedPagesResponse);
+            mRelatedResponse = relatedRelatedResponse;
+            getView().onRelatedArticlesFetched(relatedRelatedResponse);
         }
     }
 }

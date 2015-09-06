@@ -9,10 +9,7 @@ import com.google.gson.annotations.SerializedName;
 /**
  * Created by parker on 9/5/15.
  */
-public class Page implements Parcelable, ISection {
-    @Expose
-    @SerializedName("url")
-    private String url;
+public class Page implements Parcelable, IPage {
     @Expose
     @SerializedName("title")
     private String title;
@@ -20,87 +17,38 @@ public class Page implements Parcelable, ISection {
     @SerializedName("id")
     private String id;
     @Expose
-    @SerializedName("imgUrl")
-    private String imgUrl;
+    @SerializedName("url")
+    private String url;
     @Expose
-    @SerializedName("text")
-    private String text;
-
-    protected Page(Parcel in) {
-        url = in.readString();
-        title = in.readString();
-        id = in.readString();
-        imgUrl = in.readString();
-        text = in.readString();
-    }
-
-    public static final Creator<Page> CREATOR = new Creator<Page>() {
-        @Override
-        public Page createFromParcel(Parcel in) {
-            return new Page(in);
-        }
-
-        @Override
-        public Page[] newArray(int size) {
-            return new Page[size];
-        }
-    };
-
-    public String getUrl() {
-        return url;
-    }
+    @SerializedName("abstract")
+    private String abstractStr;
+    @Expose
+    @SerializedName("thumbnail")
+    private String thumbnail;
 
     @Override
     public String getTitle() {
         return title;
     }
 
+    @Override
     public String getId() {
         return id;
     }
 
-    public String getImgUrl() {
-        return imgUrl;
-    }
-
-    public String getText() {
-        return text;
+    @Override
+    public String getImageUrl() {
+        return thumbnail;
     }
 
     @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-
-        Page page = (Page) o;
-
-        if (url != null ? !url.equals(page.url) : page.url != null) return false;
-        if (title != null ? !title.equals(page.title) : page.title != null) return false;
-        if (id != null ? !id.equals(page.id) : page.id != null) return false;
-        if (imgUrl != null ? !imgUrl.equals(page.imgUrl) : page.imgUrl != null) return false;
-        return !(text != null ? !text.equals(page.text) : page.text != null);
-
+    public String getUrl() {
+        return url;
     }
 
     @Override
-    public int hashCode() {
-        int result = url != null ? url.hashCode() : 0;
-        result = 31 * result + (title != null ? title.hashCode() : 0);
-        result = 31 * result + (id != null ? id.hashCode() : 0);
-        result = 31 * result + (imgUrl != null ? imgUrl.hashCode() : 0);
-        result = 31 * result + (text != null ? text.hashCode() : 0);
-        return result;
-    }
-
-    @Override
-    public String toString() {
-        return "Page{" +
-                "url='" + url + '\'' +
-                ", title='" + title + '\'' +
-                ", id='" + id + '\'' +
-                ", imgUrl='" + imgUrl + '\'' +
-                ", text='" + text + '\'' +
-                '}';
+    public String getSummary() {
+        return abstractStr;
     }
 
     @Override
@@ -110,10 +58,67 @@ public class Page implements Parcelable, ISection {
 
     @Override
     public void writeToParcel(Parcel dest, int flags) {
-        dest.writeString(url);
-        dest.writeString(title);
-        dest.writeString(id);
-        dest.writeString(imgUrl);
-        dest.writeString(text);
+        dest.writeString(this.title);
+        dest.writeString(this.id);
+        dest.writeString(this.url);
+        dest.writeString(this.abstractStr);
+        dest.writeString(this.thumbnail);
+    }
+
+    public Page() {
+    }
+
+    protected Page(Parcel in) {
+        this.title = in.readString();
+        this.id = in.readString();
+        this.url = in.readString();
+        this.abstractStr = in.readString();
+        this.thumbnail = in.readString();
+    }
+
+    public static final Creator<Page> CREATOR = new Creator<Page>() {
+        public Page createFromParcel(Parcel source) {
+            return new Page(source);
+        }
+
+        public Page[] newArray(int size) {
+            return new Page[size];
+        }
+    };
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        Page page = (Page) o;
+
+        if (title != null ? !title.equals(page.title) : page.title != null) return false;
+        if (id != null ? !id.equals(page.id) : page.id != null) return false;
+        if (url != null ? !url.equals(page.url) : page.url != null) return false;
+        if (abstractStr != null ? !abstractStr.equals(page.abstractStr) : page.abstractStr != null) return false;
+        return !(thumbnail != null ? !thumbnail.equals(page.thumbnail) : page.thumbnail != null);
+
+    }
+
+    @Override
+    public int hashCode() {
+        int result = title != null ? title.hashCode() : 0;
+        result = 31 * result + (id != null ? id.hashCode() : 0);
+        result = 31 * result + (url != null ? url.hashCode() : 0);
+        result = 31 * result + (abstractStr != null ? abstractStr.hashCode() : 0);
+        result = 31 * result + (thumbnail != null ? thumbnail.hashCode() : 0);
+        return result;
+    }
+
+    @Override
+    public String toString() {
+        return "Page{" +
+                "title='" + title + '\'' +
+                ", id='" + id + '\'' +
+                ", url='" + url + '\'' +
+                ", abstractStr='" + abstractStr + '\'' +
+                ", thumbnail='" + thumbnail + '\'' +
+                '}';
     }
 }

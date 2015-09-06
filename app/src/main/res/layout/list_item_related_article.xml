@@ -12,7 +12,7 @@
     <ImageView
         android:id="@+id/list_item_related_article_iv"
         android:layout_width="@dimen/related_article_iv_width"
-        android:layout_height="wrap_content"
+        android:layout_height="@dimen/related_article_iv_width"
         android:layout_marginRight="@dimen/padding"/>
 
     <LinearLayout
