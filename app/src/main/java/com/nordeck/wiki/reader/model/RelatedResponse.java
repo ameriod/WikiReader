@@ -11,6 +11,8 @@ import com.google.gson.JsonDeserializer;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParseException;
+import com.google.gson.annotations.Expose;
+import com.google.gson.annotations.SerializedName;
 
 import java.lang.reflect.Type;
 import java.util.ArrayList;
@@ -18,38 +20,46 @@ import java.util.List;
 import java.util.Map;
 
 /**
+ * For the {@link com.nordeck.wiki.reader.api.RelatedArticleService}:
+ * <p/>
  * Not Gson based since the response's list is an objects keys are dynamic based on the id we are looking at. Use
- * {@link com.nordeck.wiki.reader.model.RelatedPagesResponse.Deserializer} to convert the response
+ * {@link RelatedResponse.Deserializer} to convert the response
+ * <p/>
+ * {@link com.nordeck.wiki.reader.api.TopArticlesService} Gson based response
  * <p/>
  * Created by parker on 9/5/15.
  */
-public class RelatedPagesResponse implements Parcelable {
-    private List<Page> pages;
+public class RelatedResponse implements Parcelable {
+    @Expose
+    @SerializedName("items")
+    private List<PageRelated> pages;
+    @Expose
+    @SerializedName("basepath")
     private String basePath;
 
-    private RelatedPagesResponse(List<Page> pages, String basePath) {
+    private RelatedResponse(List<PageRelated> pages, String basePath) {
         this.pages = pages;
         this.basePath = basePath;
     }
 
-    protected RelatedPagesResponse(Parcel in) {
-        pages = in.createTypedArrayList(Page.CREATOR);
+    protected RelatedResponse(Parcel in) {
+        pages = in.createTypedArrayList(PageRelated.CREATOR);
         basePath = in.readString();
     }
 
-    public static final Creator<RelatedPagesResponse> CREATOR = new Creator<RelatedPagesResponse>() {
+    public static final Creator<RelatedResponse> CREATOR = new Creator<RelatedResponse>() {
         @Override
-        public RelatedPagesResponse createFromParcel(Parcel in) {
-            return new RelatedPagesResponse(in);
+        public RelatedResponse createFromParcel(Parcel in) {
+            return new RelatedResponse(in);
         }
 
         @Override
-        public RelatedPagesResponse[] newArray(int size) {
-            return new RelatedPagesResponse[size];
+        public RelatedResponse[] newArray(int size) {
+            return new RelatedResponse[size];
         }
     };
 
-    public List<Page> getPages() {
+    public List<PageRelated> getItems() {
         return pages;
     }
 
@@ -73,7 +83,7 @@ public class RelatedPagesResponse implements Parcelable {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
 
-        RelatedPagesResponse that = (RelatedPagesResponse) o;
+        RelatedResponse that = (RelatedResponse) o;
 
         if (pages != null ? !pages.equals(that.pages) : that.pages != null) return false;
         return !(basePath != null ? !basePath.equals(that.basePath) : that.basePath != null);
@@ -98,17 +108,17 @@ public class RelatedPagesResponse implements Parcelable {
     /**
      * Converts the server response into one we can actually use
      */
-    public static class Deserializer implements JsonDeserializer<RelatedPagesResponse> {
+    public static class Deserializer implements JsonDeserializer<RelatedResponse> {
 
         public Deserializer() {
         }
 
         @Override
-        public RelatedPagesResponse deserialize(JsonElement json, Type typeOfT, JsonDeserializationContext context)
+        public RelatedResponse deserialize(JsonElement json, Type typeOfT, JsonDeserializationContext context)
                 throws JsonParseException {
             JsonObject obj = json.getAsJsonObject();
             String basePath = obj.getAsJsonPrimitive("basepath").getAsString();
-            ArrayList<Page> pages = new ArrayList<>();
+            ArrayList<PageRelated> pages = new ArrayList<>();
             JsonObject itemsObj = obj.getAsJsonObject("items");
             Gson gson = new GsonBuilder().excludeFieldsWithoutExposeAnnotation().create();
             for (Map.Entry<String, JsonElement> entry : itemsObj.entrySet()) {
@@ -116,10 +126,10 @@ public class RelatedPagesResponse implements Parcelable {
                 JsonArray pagesArray = entry.getValue().getAsJsonArray();
                 int size = pagesArray.size();
                 for (int i = 0; i < size; i++) {
-                    pages.add(gson.fromJson(pagesArray.get(i), Page.class));
+                    pages.add(gson.fromJson(pagesArray.get(i), PageRelated.class));
                 }
             }
-            return new RelatedPagesResponse(pages, basePath);
+            return new RelatedResponse(pages, basePath);
         }
     }
 }

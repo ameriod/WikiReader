@@ -7,9 +7,9 @@ import android.support.annotation.Nullable;
 import com.nordeck.wiki.reader.api.ArticleService;
 import com.nordeck.wiki.reader.api.RelatedArticleService;
 import com.nordeck.wiki.reader.model.ArticleResponse;
-import com.nordeck.wiki.reader.model.RelatedPagesResponse;
+import com.nordeck.wiki.reader.model.RelatedResponse;
 import com.nordeck.wiki.reader.ui.IArticleViewerView;
-import com.nordeck.wiki.reader.ui.TopActivity;
+import com.nordeck.wiki.reader.ui.ActivityTopArticles;
 
 import rx.Subscriber;
 import timber.log.Timber;
@@ -20,7 +20,7 @@ import timber.log.Timber;
 public class ArticleViewerPresenter extends NdBasePresenter<IArticleViewerView> {
 
     private ArticleResponse mResponse;
-    private RelatedPagesResponse mRelatedResponse;
+    private RelatedResponse mRelatedResponse;
 
     private static final String OUT_STATE_ARTICLE_RESPONSE = "out_state_article_response";
     private static final String OUT_STATE_RELATED_RESPONSE = "out_state_related_response";
@@ -50,10 +50,10 @@ public class ArticleViewerPresenter extends NdBasePresenter<IArticleViewerView> 
         if (forceLoad || mResponse == null || mResponse.getSections() == null || mResponse.getSections().size() == 0) {
             getView().showProgressIndicator(true);
             // Do not flat map the responses since the related articles seems to be optional?
-            addToSubscriptions(new ArticleService(TopActivity.TEST_WIKIA)
+            addToSubscriptions(new ArticleService(ActivityTopArticles.TEST_WIKIA)
                     .getArticle(id)
                     .subscribe(new ArticleSubscriber()));
-            addToSubscriptions(new RelatedArticleService(TopActivity.TEST_WIKIA)
+            addToSubscriptions(new RelatedArticleService(ActivityTopArticles.TEST_WIKIA)
                     .getRelatedPages(id)
                     .subscribe(new RelatedSubscriber()));
         } else {
@@ -84,7 +84,7 @@ public class ArticleViewerPresenter extends NdBasePresenter<IArticleViewerView> 
         }
     }
 
-    private class RelatedSubscriber extends Subscriber<RelatedPagesResponse> {
+    private class RelatedSubscriber extends Subscriber<RelatedResponse> {
         @Override
         public void onCompleted() {
             Timber.d("onCompleted");
@@ -96,10 +96,10 @@ public class ArticleViewerPresenter extends NdBasePresenter<IArticleViewerView> 
         }
 
         @Override
-        public void onNext(RelatedPagesResponse relatedPagesResponse) {
+        public void onNext(RelatedResponse relatedRelatedResponse) {
             Timber.d("onNext");
-            mRelatedResponse = relatedPagesResponse;
-            getView().onRelatedArticlesFetched(relatedPagesResponse);
+            mRelatedResponse = relatedRelatedResponse;
+            getView().onRelatedArticlesFetched(relatedRelatedResponse);
         }
     }
 }

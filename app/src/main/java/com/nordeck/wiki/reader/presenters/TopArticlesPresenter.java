@@ -5,9 +5,9 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 
 import com.nordeck.wiki.reader.api.TopArticlesService;
-import com.nordeck.wiki.reader.model.TopArticlesResponse;
+import com.nordeck.wiki.reader.model.PagesResponse;
 import com.nordeck.wiki.reader.ui.ITopArticlesView;
-import com.nordeck.wiki.reader.ui.TopActivity;
+import com.nordeck.wiki.reader.ui.ActivityTopArticles;
 
 import rx.Subscriber;
 import timber.log.Timber;
@@ -17,7 +17,7 @@ import timber.log.Timber;
  */
 public class TopArticlesPresenter extends NdBasePresenter<ITopArticlesView> {
 
-    private TopArticlesResponse mResponse;
+    private PagesResponse mResponse;
 
     private static final String OUT_STATE_RESPONSE = "out_state_response";
 
@@ -26,7 +26,7 @@ public class TopArticlesPresenter extends NdBasePresenter<ITopArticlesView> {
             getView().onTopArticlesFetched(mResponse);
         } else {
             getView().showProgressIndicator(true);
-            addToSubscriptions(new TopArticlesService(TopActivity.TEST_WIKIA).getTopArticles()
+            addToSubscriptions(new TopArticlesService(ActivityTopArticles.TEST_WIKIA).getTopArticlesExpanded()
                     .subscribe(new TopArticlesSubscriber()));
         }
     }
@@ -47,23 +47,25 @@ public class TopArticlesPresenter extends NdBasePresenter<ITopArticlesView> {
         }
     }
 
-    private class TopArticlesSubscriber extends Subscriber<TopArticlesResponse> {
+    private class TopArticlesSubscriber extends Subscriber<PagesResponse> {
 
         @Override
         public void onCompleted() {
-            Timber.d("TopSubscriber.onCompleted");
+            Timber.d("onCompleted");
         }
 
         @Override
         public void onError(Throwable e) {
+            getView().showProgressIndicator(false);
             getView().displayError("Error Fetching Top Articles");
-            Timber.e(e, "TopSubscriber.onError");
+            Timber.e(e, "onError");
         }
 
         @Override
-        public void onNext(TopArticlesResponse topArticlesResponse) {
+        public void onNext(PagesResponse topArticlesResponse) {
             mResponse = topArticlesResponse;
-            Timber.d("TopSubscriber.onNext");
+            Timber.d("onNext");
+            getView().showProgressIndicator(false);
             getView().onTopArticlesFetched(topArticlesResponse);
         }
     }

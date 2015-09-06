@@ -3,7 +3,7 @@ package com.nordeck.wiki.reader.api;
 import android.support.annotation.NonNull;
 
 import com.google.gson.GsonBuilder;
-import com.nordeck.wiki.reader.model.RelatedPagesResponse;
+import com.nordeck.wiki.reader.model.RelatedResponse;
 
 import retrofit.RestAdapter;
 import retrofit.converter.GsonConverter;
@@ -26,7 +26,7 @@ public class RelatedArticleService extends BaseService {
     @Override
     protected RestAdapter.Builder getBuilder(String baseUrlPath) {
         return super.getBuilder(baseUrlPath).setConverter(new GsonConverter(new GsonBuilder().registerTypeAdapter
-                (RelatedPagesResponse.class, new RelatedPagesResponse.Deserializer())
+                (RelatedResponse.class, new RelatedResponse.Deserializer())
                 .create()));
     }
 
@@ -38,11 +38,11 @@ public class RelatedArticleService extends BaseService {
     private interface RelatedWebService {
 
         @GET("/api/v1/RelatedPages/List")
-        Observable<RelatedPagesResponse> fetchRelatedPages(@Query("ids") String id);
+        Observable<RelatedResponse> fetchRelatedPages(@Query("ids") String id);
     }
 
 
-    public Observable<RelatedPagesResponse> getRelatedPages(@NonNull String id) {
+    public Observable<RelatedResponse> getRelatedPages(@NonNull String id) {
         return makeAsync(mWebService.fetchRelatedPages(id));
     }
 }
