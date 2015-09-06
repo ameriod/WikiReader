@@ -8,12 +8,13 @@ import android.widget.TextView;
 
 import com.nordeck.wiki.reader.R;
 import com.nordeck.wiki.reader.adapters.base.NdBaseRecyclerAdapter;
+import com.nordeck.wiki.reader.model.IPage;
 import com.nordeck.wiki.reader.model.PageRelated;
 
 /**
  * Created by parker on 9/4/15.
  */
-public class PageTitleAdapter extends NdBaseRecyclerAdapter<PageRelated, PageTitleAdapter.ItemViewHolder> {
+public class PageTitleAdapter extends NdBaseRecyclerAdapter<IPage, PageTitleAdapter.ItemViewHolder> {
     public PageTitleAdapter(Context context) {
         super(context);
     }

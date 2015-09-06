@@ -41,7 +41,7 @@ public class SearchArticlesService extends BaseService {
      * @return
      */
     public Observable<SearchResponse> getSearchResults(@NonNull String query) {
-        return mService.fetchSearchResults(query, LIMIT, "10", 1);
+        return makeAsync(mService.fetchSearchResults(query, LIMIT, "10", 1));
     }
 
     /**
@@ -52,6 +52,6 @@ public class SearchArticlesService extends BaseService {
      * @return
      */
     public Observable<SearchResponse> getSearchResults(@NonNull String query, @NonNull int batch) {
-        return mService.fetchSearchResults(query, LIMIT, "10", batch);
+        return makeAsync(mService.fetchSearchResults(query, LIMIT, "10", batch));
     }
 }
