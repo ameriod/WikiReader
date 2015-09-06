@@ -7,9 +7,11 @@ import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
 /**
+ * TODO replace this with the page obj?
+ * <p/>
  * Created by parker on 9/4/15.
  */
-public class TopArticle implements Parcelable{
+public class TopArticle implements Parcelable {
 
     @Expose
     @SerializedName("id")

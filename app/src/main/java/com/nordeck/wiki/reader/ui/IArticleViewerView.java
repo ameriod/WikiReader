@@ -3,6 +3,7 @@ package com.nordeck.wiki.reader.ui;
 import android.support.annotation.NonNull;
 
 import com.nordeck.wiki.reader.model.ArticleResponse;
+import com.nordeck.wiki.reader.model.RelatedPagesResponse;
 import com.nordeck.wiki.reader.presenters.NdView;
 
 /**
@@ -11,4 +12,6 @@ import com.nordeck.wiki.reader.presenters.NdView;
 public interface IArticleViewerView extends NdView {
 
     void onArticleFetched(@NonNull ArticleResponse article);
+
+    void onRelatedArticlesFetched(@NonNull RelatedPagesResponse relatedPages);
 }

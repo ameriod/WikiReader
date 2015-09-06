@@ -21,7 +21,7 @@ import butterknife.ButterKnife;
 public class TopActivity extends BaseActivity implements ITopArticlesView, RecyclerItemClickSupport
         .OnItemClickListener {
 
-    public static final String STAR_WARS_WIKI = "http://starwars.wikia.com/api/v1";
+    public static final String TEST_WIKIA = /*"http://starwars.wikia.com"*/ "http://muppet.wikia.com";
 
     @Bind(R.id.recycler_view)
     RecyclerView mRecyclerView;
@@ -86,9 +86,7 @@ public class TopActivity extends BaseActivity implements ITopArticlesView, Recyc
     @Override
     public boolean onItemClick(RecyclerView parent, View view, int position, long id) {
         TopArticle article = mAdapter.getItem(position);
-        Intent intent = ArticleViewerActivity.getLaunchIntent(getApplicationContext(), article.getId());
-        // TODO make cool animation
-        startActivity(intent);
+        ArticleViewerActivity.launchActivity(this, article.getId());
         return true;
     }
 }

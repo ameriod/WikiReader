@@ -1,6 +1,7 @@
 package com.nordeck.wiki.reader.adapters;
 
 import android.content.Context;
+import android.support.annotation.Nullable;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
@@ -9,13 +10,19 @@ import android.widget.TextView;
 
 import com.nordeck.wiki.reader.R;
 import com.nordeck.wiki.reader.adapters.base.NdBaseRecyclerAdapter;
+import com.nordeck.wiki.reader.model.ISection;
+import com.nordeck.wiki.reader.model.RelatedPagesResponse;
 import com.nordeck.wiki.reader.model.Section;
+
+import java.util.List;
 
 /**
  * Created by parker on 9/5/15.
  */
-public class SectionNavAdapter extends NdBaseRecyclerAdapter<Section, SectionNavAdapter.SectionNavHolder> {
+public class SectionNavAdapter extends NdBaseRecyclerAdapter<ISection, SectionNavAdapter.SectionNavHolder> {
     private int mCurrentPosition;
+
+    private RelatedPagesResponse relatedResponse;
 
     public SectionNavAdapter(Context context) {
         super(context);
@@ -47,8 +54,29 @@ public class SectionNavAdapter extends NdBaseRecyclerAdapter<Section, SectionNav
         }
     }
 
+    @Override
+    public void addAll(List<ISection> itemsToAdd, boolean replace) {
+        super.addAll(itemsToAdd, replace);
+        if (replace) {
+            addRelatedArticles(relatedResponse);
+        }
+    }
+
+    public void addRelatedArticles(@Nullable RelatedPagesResponse relatedResponse) {
+        this.relatedResponse = relatedResponse;
+        if (relatedResponse != null && relatedResponse.getPages() != null && relatedResponse.getPages().size() > 0) {
+            ISection section = Section.newInstance(context.getString(R.string.article_viewer_related));
+            addItem(section);
+            notifyItemInserted(getItemCount() - 1);
+        }
+    }
+
     public void setCurrentPosition(int currentPosition) {
         notifyItemChanged(mCurrentPosition);
+        // need to off-set the current position if there are related articles
+        if (relatedResponse != null && relatedResponse.getPages() != null) {
+            currentPosition = currentPosition - relatedResponse.getPages().size();
+        }
         this.mCurrentPosition = currentPosition;
         notifyItemChanged(currentPosition);
     }

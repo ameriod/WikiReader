@@ -26,13 +26,12 @@ public class TopArticlesService extends BaseService {
 
     private interface TopWebService {
 
-        @GET("/Articles/Top/AsSimpleJson")
+        @GET("/api/v1/Articles/Top/AsSimpleJson")
         Observable<TopArticlesResponse> fetchTopArticles();
     }
 
 
     public Observable<TopArticlesResponse> getTopArticles() {
         return makeAsync(mWebService.fetchTopArticles());
-
     }
 }

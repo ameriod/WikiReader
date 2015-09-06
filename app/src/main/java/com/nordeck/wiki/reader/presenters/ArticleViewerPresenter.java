@@ -5,7 +5,9 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 
 import com.nordeck.wiki.reader.api.ArticleService;
+import com.nordeck.wiki.reader.api.RelatedArticleService;
 import com.nordeck.wiki.reader.model.ArticleResponse;
+import com.nordeck.wiki.reader.model.RelatedPagesResponse;
 import com.nordeck.wiki.reader.ui.IArticleViewerView;
 import com.nordeck.wiki.reader.ui.TopActivity;
 
@@ -18,8 +20,10 @@ import timber.log.Timber;
 public class ArticleViewerPresenter extends NdBasePresenter<IArticleViewerView> {
 
     private ArticleResponse mResponse;
+    private RelatedPagesResponse mRelatedResponse;
 
     private static final String OUT_STATE_ARTICLE_RESPONSE = "out_state_article_response";
+    private static final String OUT_STATE_RELATED_RESPONSE = "out_state_related_response";
 
 
     @Override
@@ -27,6 +31,7 @@ public class ArticleViewerPresenter extends NdBasePresenter<IArticleViewerView> 
         super.onCreate(bundle);
         if (bundle != null) {
             mResponse = bundle.getParcelable(OUT_STATE_ARTICLE_RESPONSE);
+            mRelatedResponse = bundle.getParcelable(OUT_STATE_RELATED_RESPONSE);
         }
     }
 
@@ -36,15 +41,24 @@ public class ArticleViewerPresenter extends NdBasePresenter<IArticleViewerView> 
         if (mResponse != null) {
             bundle.putParcelable(OUT_STATE_ARTICLE_RESPONSE, mResponse);
         }
+        if (mRelatedResponse != null) {
+            bundle.putParcelable(OUT_STATE_RELATED_RESPONSE, mRelatedResponse);
+        }
     }
 
     public void fetchArticle(@NonNull String id, boolean forceLoad) {
         if (forceLoad || mResponse == null || mResponse.getSections() == null || mResponse.getSections().size() == 0) {
             getView().showProgressIndicator(true);
-            addToSubscriptions(new ArticleService(TopActivity.STAR_WARS_WIKI).getArticle(id)
+            // Do not flat map the responses since the related articles seems to be optional?
+            addToSubscriptions(new ArticleService(TopActivity.TEST_WIKIA)
+                    .getArticle(id)
                     .subscribe(new ArticleSubscriber()));
+            addToSubscriptions(new RelatedArticleService(TopActivity.TEST_WIKIA)
+                    .getRelatedPages(id)
+                    .subscribe(new RelatedSubscriber()));
         } else {
             getView().onArticleFetched(mResponse);
+            getView().onRelatedArticlesFetched(mRelatedResponse);
         }
     }
 
@@ -57,7 +71,7 @@ public class ArticleViewerPresenter extends NdBasePresenter<IArticleViewerView> 
 
         @Override
         public void onError(Throwable e) {
-            Timber.d("onError");
+            Timber.d(e, "onError");
             getView().displayError("Error Fetching Article");
         }
 
@@ -67,6 +81,25 @@ public class ArticleViewerPresenter extends NdBasePresenter<IArticleViewerView> 
             mResponse = articleResponse;
             getView().showProgressIndicator(false);
             getView().onArticleFetched(articleResponse);
+        }
+    }
+
+    private class RelatedSubscriber extends Subscriber<RelatedPagesResponse> {
+        @Override
+        public void onCompleted() {
+            Timber.d("onCompleted");
+        }
+
+        @Override
+        public void onError(Throwable e) {
+            Timber.d(e, "onError");
+        }
+
+        @Override
+        public void onNext(RelatedPagesResponse relatedPagesResponse) {
+            Timber.d("onNext");
+            mRelatedResponse = relatedPagesResponse;
+            getView().onRelatedArticlesFetched(relatedPagesResponse);
         }
     }
 }

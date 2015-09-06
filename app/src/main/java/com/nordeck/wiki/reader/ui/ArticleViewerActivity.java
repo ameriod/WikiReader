@@ -1,5 +1,6 @@
 package com.nordeck.wiki.reader.ui;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
@@ -16,18 +17,24 @@ import com.nordeck.wiki.reader.adapters.SectionNavAdapter;
 import com.nordeck.wiki.reader.adapters.base.NdDividerItemDecoration;
 import com.nordeck.wiki.reader.adapters.base.RecyclerItemClickSupport;
 import com.nordeck.wiki.reader.model.ArticleResponse;
+import com.nordeck.wiki.reader.model.ISection;
+import com.nordeck.wiki.reader.model.Page;
+import com.nordeck.wiki.reader.model.RelatedPagesResponse;
 import com.nordeck.wiki.reader.presenters.ArticleViewerPresenter;
+
+import java.util.ArrayList;
+import java.util.List;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
 
 /**
- * TODO save the recycler view positions and restore their states.
+ * TODO save the recycler view positions and restore their states?
  * <p/>
  * Created by parker on 9/4/15.
  */
 public class ArticleViewerActivity extends BaseActivity implements IArticleViewerView, RecyclerItemClickSupport
-        .OnItemClickListener {
+        .OnItemClickListener, ContentViewerAdapter.OnClickRelatedArticleListener {
 
     private static final String EXTRA_ARTICLE_ID = "extra_article_id";
     @Bind(R.id.drawer_layout)
@@ -44,11 +51,17 @@ public class ArticleViewerActivity extends BaseActivity implements IArticleViewe
     private SectionNavAdapter mNavAdapter;
     private LinearLayoutManager mNavLayoutManager;
 
-    public static Intent getLaunchIntent(Context context, @NonNull String articleId) {
+    private static Intent getLaunchIntent(Context context, @NonNull String articleId) {
         Intent intent = new Intent(context, ArticleViewerActivity.class);
         intent.putExtra(EXTRA_ARTICLE_ID, articleId);
         return intent;
     }
+
+    public static void launchActivity(Activity activity, @NonNull String articleId) {
+        // TODO create cool transition
+        activity.startActivity(getLaunchIntent(activity, articleId));
+    }
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -62,7 +75,7 @@ public class ArticleViewerActivity extends BaseActivity implements IArticleViewe
         mContentLayoutManager.setOrientation(LinearLayoutManager.VERTICAL);
         // The content adapter
         mRecyclerView.setLayoutManager(mContentLayoutManager);
-        mContentAdapter = new ContentViewerAdapter(this);
+        mContentAdapter = new ContentViewerAdapter(this, this);
         mRecyclerView.setAdapter(mContentAdapter);
         // Section nav adapter
         mNavLayoutManager = new LinearLayoutManager(getApplicationContext());
@@ -116,8 +129,16 @@ public class ArticleViewerActivity extends BaseActivity implements IArticleViewe
 
     @Override
     public void onArticleFetched(@NonNull ArticleResponse article) {
-        mContentAdapter.addAll(article.getSections(), true);
-        mNavAdapter.addAll(article.getSections(), true);
+        List<ISection> sections = new ArrayList<ISection>(article.getSections());
+        mContentAdapter.addAll(sections, true);
+        mNavAdapter.addAll(sections, true);
+        mNavAdapter.setCurrentPosition(mNavAdapter.getCurrentPosition());
+    }
+
+    @Override
+    public void onRelatedArticlesFetched(@NonNull RelatedPagesResponse relatedPages) {
+        mContentAdapter.addRelatedArticles(relatedPages);
+        mNavAdapter.addRelatedArticles(relatedPages);
     }
 
     @Override
@@ -142,6 +163,11 @@ public class ArticleViewerActivity extends BaseActivity implements IArticleViewe
         mNavAdapter.setCurrentPosition(position);
         centerNavListOnSelectedPos(position);
         return true;
+    }
+
+    @Override
+    public void onClickArticle(Page page) {
+        ArticleViewerActivity.launchActivity(this, page.getId());
     }
 
     private void centerNavListOnSelectedPos(int selectedPos) {

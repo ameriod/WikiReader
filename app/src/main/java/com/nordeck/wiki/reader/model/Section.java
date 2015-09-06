@@ -2,6 +2,7 @@ package com.nordeck.wiki.reader.model;
 
 import android.os.Parcel;
 import android.os.Parcelable;
+import android.support.annotation.NonNull;
 import android.text.TextUtils;
 
 import com.google.gson.annotations.Expose;
@@ -12,7 +13,7 @@ import java.util.List;
 /**
  * Created by parker on 9/4/15.
  */
-public class Section implements Parcelable {
+public class Section implements Parcelable, ISection {
 
     @Expose
     @SerializedName("title")
@@ -28,6 +29,14 @@ public class Section implements Parcelable {
     private List<Content> content;
 
     private String contentStr;
+
+    public static Section newInstance(@NonNull String title) {
+        return new Section(title);
+    }
+
+    public Section(String title) {
+        this.title = title;
+    }
 
     protected Section(Parcel in) {
         title = in.readString();
@@ -63,6 +72,7 @@ public class Section implements Parcelable {
         }
     };
 
+    @Override
     public String getTitle() {
         return title;
     }
@@ -109,7 +119,9 @@ public class Section implements Parcelable {
             int size = getContent().size();
             for (int i = 0; i < size; i++) {
                 Content content = getContent().get(i);
-                contentStr = contentStr + content.getText();
+                if (!TextUtils.isEmpty(content.getText())) {
+                    contentStr = contentStr + content.getText();
+                }
                 if (i != size - 1) {
                     contentStr = contentStr + "\n\n";
                 }
