@@ -72,13 +72,13 @@ public class SectionNavAdapter extends NdBaseRecyclerAdapter<ISection, SectionNa
     }
 
     public void setCurrentPosition(int currentPosition) {
-        notifyItemChanged(mCurrentPosition);
-        // need to off-set the current position if there are related articles
-        if (relatedResponse != null && relatedResponse.getItems() != null) {
-            currentPosition = currentPosition - relatedResponse.getItems().size();
+        if (currentPosition < getItemCount()) {
+            notifyItemChanged(mCurrentPosition);
+            this.mCurrentPosition = currentPosition;
+            notifyItemChanged(currentPosition);
+        } else {
+            notifyItemChanged(mCurrentPosition);
         }
-        this.mCurrentPosition = currentPosition;
-        notifyItemChanged(currentPosition);
     }
 
     public int getCurrentPosition() {
