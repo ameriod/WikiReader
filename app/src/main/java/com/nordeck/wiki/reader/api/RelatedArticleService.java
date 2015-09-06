@@ -25,9 +25,10 @@ public class RelatedArticleService extends BaseService {
     @NonNull
     @Override
     protected RestAdapter.Builder getBuilder(String baseUrlPath) {
-        return super.getBuilder(baseUrlPath).setConverter(new GsonConverter(new GsonBuilder().registerTypeAdapter
-                (RelatedResponse.class, new RelatedResponse.Deserializer())
-                .create()));
+        return super.getBuilder(baseUrlPath)
+                .setConverter(new GsonConverter(new GsonBuilder()
+                        .registerTypeAdapter(RelatedResponse.class, new RelatedResponse.Deserializer())
+                        .create()));
     }
 
     @Override
