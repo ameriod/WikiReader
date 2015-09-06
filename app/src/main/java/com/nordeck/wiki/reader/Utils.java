@@ -1,5 +1,6 @@
 package com.nordeck.wiki.reader;
 
+import android.support.annotation.Nullable;
 import android.view.View;
 
 /**
@@ -7,7 +8,10 @@ import android.view.View;
  */
 public class Utils {
 
-    public static void setViewVisibility(View v, boolean show) {
+    public static void setViewVisibility(@Nullable View v, boolean show) {
+        if (v == null) {
+            return;
+        }
         if (show) {
             v.setVisibility(View.VISIBLE);
         } else {

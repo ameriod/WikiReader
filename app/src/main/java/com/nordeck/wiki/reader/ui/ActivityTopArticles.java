@@ -4,14 +4,16 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 
 import com.nordeck.wiki.reader.R;
+import com.nordeck.wiki.reader.Utils;
 import com.nordeck.wiki.reader.adapters.PageDetailAdapter;
 import com.nordeck.wiki.reader.model.IPage;
-import com.nordeck.wiki.reader.model.PageRelated;
 import com.nordeck.wiki.reader.model.PagesResponse;
-import com.nordeck.wiki.reader.model.RelatedResponse;
 import com.nordeck.wiki.reader.presenters.TopArticlesPresenter;
 import com.nordeck.wiki.reader.adapters.base.NdDividerItemDecoration;
 import com.nordeck.wiki.reader.adapters.base.RecyclerItemClickSupport;
@@ -21,7 +23,7 @@ import java.util.ArrayList;
 import butterknife.Bind;
 import butterknife.ButterKnife;
 
-public class TopActivity extends BaseActivity implements ITopArticlesView, RecyclerItemClickSupport
+public class ActivityTopArticles extends BaseActivity implements ITopArticlesView, RecyclerItemClickSupport
         .OnItemClickListener {
 
     public static final String TEST_WIKIA = /*"http://starwars.wikia.com"*/ "http://muppet.wikia.com";
@@ -37,6 +39,7 @@ public class TopActivity extends BaseActivity implements ITopArticlesView, Recyc
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         ButterKnife.bind(this);
+        setupActionBar();
 
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getApplicationContext());
         linearLayoutManager.setOrientation(LinearLayoutManager.VERTICAL);
@@ -49,6 +52,28 @@ public class TopActivity extends BaseActivity implements ITopArticlesView, Recyc
         mPresenter = new TopArticlesPresenter();
         mPresenter.bindView(this);
         mPresenter.onCreate(savedInstanceState);
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.menu_main, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        // Handle item selection
+        switch (item.getItemId()) {
+            case R.id.action_settings:
+                // TODO impl
+                return true;
+            case R.id.action_search_pages:
+                ActivitySearchPages.launchActivity(this);
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
+        }
     }
 
     @Override
@@ -78,7 +103,7 @@ public class TopActivity extends BaseActivity implements ITopArticlesView, Recyc
 
     @Override
     public void showProgressIndicator(boolean show) {
-
+        Utils.setViewVisibility(mLoading, show);
     }
 
     @Override
@@ -89,7 +114,7 @@ public class TopActivity extends BaseActivity implements ITopArticlesView, Recyc
     @Override
     public boolean onItemClick(RecyclerView parent, View view, int position, long id) {
         IPage article = mAdapter.getItem(position);
-        ArticleViewerActivity.launchActivity(this, article.getId());
+        ActivityArticleViewer.launchActivity(this, article.getId());
         return true;
     }
 }

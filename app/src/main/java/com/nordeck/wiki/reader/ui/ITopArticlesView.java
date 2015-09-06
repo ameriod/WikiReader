@@ -3,7 +3,6 @@ package com.nordeck.wiki.reader.ui;
 import android.support.annotation.NonNull;
 
 import com.nordeck.wiki.reader.model.PagesResponse;
-import com.nordeck.wiki.reader.model.RelatedResponse;
 import com.nordeck.wiki.reader.presenters.NdView;
 
 /**

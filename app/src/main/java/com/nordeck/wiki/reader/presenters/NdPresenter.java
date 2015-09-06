@@ -6,14 +6,14 @@ import android.support.annotation.Nullable;
 
 public interface NdPresenter<V extends NdView> {
 
-    public void bindView(V view);
+    void bindView(V view);
 
-    public void unbindView();
+    void unbindView();
 
-    public void onDestroy();
+    void onDestroy();
 
-    public void onCreate(@Nullable Bundle bundle);
+    void onCreate(@Nullable Bundle bundle);
 
-    public void onSaveInstanceState(@NonNull Bundle bundle);
+    void onSaveInstanceState(@NonNull Bundle bundle);
 
 }

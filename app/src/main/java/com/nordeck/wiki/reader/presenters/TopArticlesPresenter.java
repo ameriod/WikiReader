@@ -4,13 +4,10 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 
-import com.nordeck.wiki.reader.api.SearchArticlesService;
 import com.nordeck.wiki.reader.api.TopArticlesService;
 import com.nordeck.wiki.reader.model.PagesResponse;
-import com.nordeck.wiki.reader.model.RelatedResponse;
-import com.nordeck.wiki.reader.model.SearchResponse;
 import com.nordeck.wiki.reader.ui.ITopArticlesView;
-import com.nordeck.wiki.reader.ui.TopActivity;
+import com.nordeck.wiki.reader.ui.ActivityTopArticles;
 
 import rx.Subscriber;
 import timber.log.Timber;
@@ -29,7 +26,7 @@ public class TopArticlesPresenter extends NdBasePresenter<ITopArticlesView> {
             getView().onTopArticlesFetched(mResponse);
         } else {
             getView().showProgressIndicator(true);
-            addToSubscriptions(new TopArticlesService(TopActivity.TEST_WIKIA).getTopArticlesExpanded()
+            addToSubscriptions(new TopArticlesService(ActivityTopArticles.TEST_WIKIA).getTopArticlesExpanded()
                     .subscribe(new TopArticlesSubscriber()));
         }
     }
@@ -59,6 +56,7 @@ public class TopArticlesPresenter extends NdBasePresenter<ITopArticlesView> {
 
         @Override
         public void onError(Throwable e) {
+            getView().showProgressIndicator(false);
             getView().displayError("Error Fetching Top Articles");
             Timber.e(e, "onError");
         }
@@ -67,6 +65,7 @@ public class TopArticlesPresenter extends NdBasePresenter<ITopArticlesView> {
         public void onNext(PagesResponse topArticlesResponse) {
             mResponse = topArticlesResponse;
             Timber.d("onNext");
+            getView().showProgressIndicator(false);
             getView().onTopArticlesFetched(topArticlesResponse);
         }
     }

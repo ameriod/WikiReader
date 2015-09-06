@@ -9,7 +9,7 @@ import com.nordeck.wiki.reader.api.RelatedArticleService;
 import com.nordeck.wiki.reader.model.ArticleResponse;
 import com.nordeck.wiki.reader.model.RelatedResponse;
 import com.nordeck.wiki.reader.ui.IArticleViewerView;
-import com.nordeck.wiki.reader.ui.TopActivity;
+import com.nordeck.wiki.reader.ui.ActivityTopArticles;
 
 import rx.Subscriber;
 import timber.log.Timber;
@@ -50,10 +50,10 @@ public class ArticleViewerPresenter extends NdBasePresenter<IArticleViewerView> 
         if (forceLoad || mResponse == null || mResponse.getSections() == null || mResponse.getSections().size() == 0) {
             getView().showProgressIndicator(true);
             // Do not flat map the responses since the related articles seems to be optional?
-            addToSubscriptions(new ArticleService(TopActivity.TEST_WIKIA)
+            addToSubscriptions(new ArticleService(ActivityTopArticles.TEST_WIKIA)
                     .getArticle(id)
                     .subscribe(new ArticleSubscriber()));
-            addToSubscriptions(new RelatedArticleService(TopActivity.TEST_WIKIA)
+            addToSubscriptions(new RelatedArticleService(ActivityTopArticles.TEST_WIKIA)
                     .getRelatedPages(id)
                     .subscribe(new RelatedSubscriber()));
         } else {

@@ -12,6 +12,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.View;
 
 import com.nordeck.wiki.reader.R;
+import com.nordeck.wiki.reader.Utils;
 import com.nordeck.wiki.reader.adapters.ContentViewerAdapter;
 import com.nordeck.wiki.reader.adapters.SectionNavAdapter;
 import com.nordeck.wiki.reader.adapters.base.NdDividerItemDecoration;
@@ -19,7 +20,6 @@ import com.nordeck.wiki.reader.adapters.base.RecyclerItemClickSupport;
 import com.nordeck.wiki.reader.model.ArticleResponse;
 import com.nordeck.wiki.reader.model.IPage;
 import com.nordeck.wiki.reader.model.ISection;
-import com.nordeck.wiki.reader.model.PageRelated;
 import com.nordeck.wiki.reader.model.RelatedResponse;
 import com.nordeck.wiki.reader.presenters.ArticleViewerPresenter;
 
@@ -34,7 +34,7 @@ import butterknife.ButterKnife;
  * <p/>
  * Created by parker on 9/4/15.
  */
-public class ArticleViewerActivity extends BaseActivity implements IArticleViewerView, RecyclerItemClickSupport
+public class ActivityArticleViewer extends BaseActivity implements IArticleViewerView, RecyclerItemClickSupport
         .OnItemClickListener, ContentViewerAdapter.OnClickRelatedArticleListener {
 
     private static final String EXTRA_ARTICLE_ID = "extra_article_id";
@@ -53,7 +53,7 @@ public class ArticleViewerActivity extends BaseActivity implements IArticleViewe
     private LinearLayoutManager mNavLayoutManager;
 
     private static Intent getLaunchIntent(Context context, @NonNull String articleId) {
-        Intent intent = new Intent(context, ArticleViewerActivity.class);
+        Intent intent = new Intent(context, ActivityArticleViewer.class);
         intent.putExtra(EXTRA_ARTICLE_ID, articleId);
         return intent;
     }
@@ -69,6 +69,7 @@ public class ArticleViewerActivity extends BaseActivity implements IArticleViewe
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_content_view);
         ButterKnife.bind(this);
+        setupActionBar();
 
         mId = getIntent().getStringExtra(EXTRA_ARTICLE_ID);
 
@@ -144,7 +145,7 @@ public class ArticleViewerActivity extends BaseActivity implements IArticleViewe
 
     @Override
     public void showProgressIndicator(boolean show) {
-
+        Utils.setViewVisibility(mLoading, show);
     }
 
     @Override
@@ -168,7 +169,7 @@ public class ArticleViewerActivity extends BaseActivity implements IArticleViewe
 
     @Override
     public void onClickArticle(IPage page) {
-        ArticleViewerActivity.launchActivity(this, page.getId());
+        ActivityArticleViewer.launchActivity(this, page.getId());
     }
 
     private void centerNavListOnSelectedPos(int selectedPos) {
