@@ -1,8 +1,10 @@
 package com.nordeck.wiki.reader.api;
 
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 
 import retrofit.RestAdapter;
+import retrofit.converter.Converter;
 import rx.Observable;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.schedulers.Schedulers;
@@ -15,13 +17,15 @@ import rx.schedulers.Schedulers;
 abstract class BaseService {
 
     public BaseService(String baseUrlPath) {
+        initService(getBuilder(baseUrlPath)
+                .build());
+    }
 
-        RestAdapter restAdapter = new RestAdapter.Builder()
+    @NonNull
+    protected RestAdapter.Builder getBuilder(String baseUrlPath) {
+        return new RestAdapter.Builder()
                 .setEndpoint(baseUrlPath)
-                .setLogLevel(RestAdapter.LogLevel.BASIC)
-                .build();
-
-        initService(restAdapter);
+                .setLogLevel(RestAdapter.LogLevel.BASIC);
     }
 
     protected abstract void initService(@NonNull RestAdapter restAdapter);

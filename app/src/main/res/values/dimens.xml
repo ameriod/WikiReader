@@ -15,5 +15,5 @@
 
     <!-- Content Viewer Screen-->
     <dimen name="content_sections_drawer_width">240dp</dimen>
-    <dimen name="content_image_height">200dp</dimen>
+    <dimen name="related_article_iv_width">48dp</dimen>
 </resources>

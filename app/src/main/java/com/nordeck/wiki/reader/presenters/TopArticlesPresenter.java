@@ -26,7 +26,7 @@ public class TopArticlesPresenter extends NdBasePresenter<ITopArticlesView> {
             getView().onTopArticlesFetched(mResponse);
         } else {
             getView().showProgressIndicator(true);
-            addToSubscriptions(new TopArticlesService(TopActivity.STAR_WARS_WIKI).getTopArticles()
+            addToSubscriptions(new TopArticlesService(TopActivity.TEST_WIKIA).getTopArticles()
                     .subscribe(new TopArticlesSubscriber()));
         }
     }

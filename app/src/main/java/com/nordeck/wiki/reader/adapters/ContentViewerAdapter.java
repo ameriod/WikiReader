@@ -1,6 +1,7 @@
 package com.nordeck.wiki.reader.adapters;
 
 import android.content.Context;
+import android.support.annotation.Nullable;
 import android.support.v7.widget.RecyclerView;
 import android.text.Html;
 import android.text.Spanned;
@@ -15,63 +16,135 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.nordeck.wiki.reader.R;
-import com.nordeck.wiki.reader.model.Image;
-import com.nordeck.wiki.reader.model.Section;
 import com.nordeck.wiki.reader.adapters.base.NdBaseRecyclerAdapter;
+import com.nordeck.wiki.reader.model.ISection;
+import com.nordeck.wiki.reader.model.Image;
+import com.nordeck.wiki.reader.model.Page;
+import com.nordeck.wiki.reader.model.RelatedPagesResponse;
+import com.nordeck.wiki.reader.model.Section;
 import com.nordeck.wiki.reader.views.HtmlTagHandler;
 import com.squareup.picasso.Picasso;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import timber.log.Timber;
 
 /**
- * TODO make the content expandable?
- * <p/>
  * Created by parker on 9/4/15.
  */
-public class ContentViewerAdapter extends NdBaseRecyclerAdapter<Section, ContentViewerAdapter.SectionViewHolder>
+public class ContentViewerAdapter extends NdBaseRecyclerAdapter<ISection, RecyclerView.ViewHolder>
         implements View.OnClickListener {
+
+    public interface OnClickRelatedArticleListener {
+        void onClickArticle(Page page);
+    }
+
+    private OnClickRelatedArticleListener mArticleListener;
+
+    private static final int TYPE_SECTION = 0;
+    private static final int TYPE_RELATED = 1;
+
+    private RelatedPagesResponse mRelatedResponse;
 
     private SparseArray<Spanned> mSpanCache;
 
-    public ContentViewerAdapter(Context context) {
+    public ContentViewerAdapter(Context context, OnClickRelatedArticleListener listener) {
         super(context);
+        mArticleListener = listener;
     }
 
     @Override
-    public SectionViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        View view = inflater.inflate(R.layout.list_item_article_section, parent, false);
-        return new SectionViewHolder(view);
+    public int getItemViewType(int position) {
+        ISection section = getItem(position);
+        if (section instanceof Page) {
+            return TYPE_RELATED;
+        }
+        return TYPE_SECTION;
     }
 
     @Override
-    public void onBindViewHolder(SectionViewHolder holder, int position) {
-        Section item = getItem(position);
-        holder.tvTitle.setText(item.getTitle());
-        // Some sections do not have titles
-        showView(holder.tvTitle, !TextUtils.isEmpty(item.getTitle()));
-        if (item.isContentTitle()) {
-            // no content so hide the tv
-            showView(holder.tvContent, false);
-        } else if (item.isContentParagraph()) {
-            holder.tvContent.setText(item.getParagraphStr());
-            showView(holder.tvContent, true);
-        } else if (item.isContentList()) {
-            holder.tvContent.setText(getSpan(position, item.getListStr()));
-            showView(holder.tvContent, true);
-        } else {
-            showView(holder.tvContent, false);
-            Timber.e("Unsupported content type section: " + item);
+    public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+        if (viewType == TYPE_RELATED) {
+            return new RelatedViewHolder(inflater.inflate(R.layout.list_item_related_article, parent, false));
+        }
+        return new SectionViewHolder(inflater.inflate(R.layout.list_item_article_section, parent, false));
+    }
+
+    @Override
+    public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
+        ISection iSection = getItem(position);
+
+        int viewType = getItemViewType(position);
+
+        if (viewType == TYPE_SECTION) {
+            Section item = (Section) iSection;
+            SectionViewHolder sectionHolder = (SectionViewHolder) holder;
+
+            sectionHolder.tvTitle.setText(item.getTitle());
+            // Some sections do not have titles
+            showView(sectionHolder.tvTitle, !TextUtils.isEmpty(item.getTitle()));
+            if (item.isContentTitle()) {
+                // no content so hide the tv
+                showView(sectionHolder.tvContent, false);
+            } else if (item.isContentParagraph()) {
+                sectionHolder.tvContent.setText(item.getParagraphStr());
+                showView(sectionHolder.tvContent, true);
+            } else if (item.isContentList()) {
+                sectionHolder.tvContent.setText(getSpan(position, item.getListStr()));
+                showView(sectionHolder.tvContent, true);
+            } else {
+                showView(sectionHolder.tvContent, false);
+                Timber.e("Unsupported content type section: " + item);
+            }
+
+            if (item.getImages() != null && item.getImages().size() > 0) {
+                addImagesToView(sectionHolder.containerImages, item.getImages());
+                showView(sectionHolder.hsImages, true);
+                showView(sectionHolder.containerImages, true);
+            } else {
+                showView(sectionHolder.containerImages, false);
+                showView(sectionHolder.hsImages, false);
+            }
+        } else if (viewType == TYPE_RELATED) {
+            Page page = (Page) iSection;
+            RelatedViewHolder relatedHolder = (RelatedViewHolder) holder;
+            relatedHolder.tvTitle.setText(page.getTitle());
+            relatedHolder.tvSummary.setText(page.getText());
+            if (TextUtils.isEmpty(page.getImgUrl())) {
+                showView(relatedHolder.iv, false);
+            } else {
+                showView(relatedHolder.iv, true);
+                Picasso.with(context.getApplicationContext()).load(page.getImgUrl()).into(relatedHolder.iv);
+            }
+            relatedHolder.itemView.setTag(page);
+            relatedHolder.itemView.setOnClickListener(this);
         }
 
-        if (item.getImages() != null && item.getImages().size() > 0) {
-            addImagesToView(holder.containerImages, item.getImages());
-            showView(holder.hsImages, true);
-            showView(holder.containerImages, true);
+    }
+
+    @Override
+    public void addAll(List<ISection> itemsToAdd, boolean replace) {
+        super.addAll(itemsToAdd, replace);
+        // re-add the response if already added
+        addRelatedArticles(mRelatedResponse);
+    }
+
+    public void addRelatedArticles(@Nullable RelatedPagesResponse response) {
+        mRelatedResponse = response;
+        if (response != null && response.getPages() != null && response.getPages().size() > 0) {
+            List<ISection> relatedSections = new ArrayList<>();
+            ISection sectionTitle = Section.newInstance(context.getString(R.string.article_viewer_related));
+            relatedSections.add(sectionTitle);
+            relatedSections.addAll(response.getPages());
+            int currentCount = getItemCount();
+            for (int i = 0, size = relatedSections.size(); i < size; i++) {
+                ISection section = relatedSections.get(i);
+                addItem(section, false);
+                notifyItemInserted(currentCount + i);
+            }
         } else {
-            showView(holder.containerImages, false);
-            showView(holder.hsImages, false);
+            Timber.d("RelatedPagesResponse is null");
         }
     }
 
@@ -93,7 +166,7 @@ public class ContentViewerAdapter extends NdBaseRecyclerAdapter<Section, Content
         return span;
     }
 
-    class SectionViewHolder extends RecyclerView.ViewHolder {
+    private class SectionViewHolder extends RecyclerView.ViewHolder {
         TextView tvTitle;
         TextView tvContent;
         HorizontalScrollView hsImages;
@@ -106,6 +179,20 @@ public class ContentViewerAdapter extends NdBaseRecyclerAdapter<Section, Content
             hsImages = (HorizontalScrollView) itemView.findViewById(R.id.list_item_article_section_hs_images);
             containerImages = (LinearLayout) itemView.findViewById(R.id.list_item_article_section_container_images);
         }
+    }
+
+    private class RelatedViewHolder extends RecyclerView.ViewHolder {
+        ImageView iv;
+        TextView tvTitle;
+        TextView tvSummary;
+
+        public RelatedViewHolder(View itemView) {
+            super(itemView);
+            iv = (ImageView) itemView.findViewById(R.id.list_item_related_article_iv);
+            tvTitle = (TextView) itemView.findViewById(R.id.list_item_related_article_tv_title);
+            tvSummary = (TextView) itemView.findViewById(R.id.list_item_related_article_tv_summary);
+        }
+
     }
 
     private void showView(View v, boolean show) {
@@ -157,6 +244,14 @@ public class ContentViewerAdapter extends NdBaseRecyclerAdapter<Section, Content
 
     @Override
     public void onClick(View v) {
-        Toast.makeText(context, v.getTag().toString(), Toast.LENGTH_SHORT).show();
+        if (v instanceof ImageView) {
+            String caption = v.getTag().toString();
+            if (!TextUtils.isEmpty(caption)) {
+                Toast.makeText(context.getApplicationContext(), caption, Toast.LENGTH_SHORT).show();
+            }
+        } else if (v.getTag() instanceof Page) {
+            Page page = (Page) v.getTag();
+            mArticleListener.onClickArticle(page);
+        }
     }
 }

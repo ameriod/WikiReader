@@ -29,11 +29,12 @@ public class ArticleService extends BaseService {
 
     private interface ArticleWebService {
 
-        @GET("/Articles/AsSimpleJson")
+        @GET("/api/v1/Articles/AsSimpleJson")
         Observable<ArticleResponse> fetchArticle(@Query("id") String id);
     }
 
     public Observable<ArticleResponse> getArticle(@NonNull String id) {
         return makeAsync(mWebService.fetchArticle(id));
     }
+
 }
