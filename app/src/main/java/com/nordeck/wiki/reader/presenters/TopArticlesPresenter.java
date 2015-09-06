@@ -4,9 +4,11 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 
+import com.nordeck.wiki.reader.api.SearchArticlesService;
 import com.nordeck.wiki.reader.api.TopArticlesService;
 import com.nordeck.wiki.reader.model.PagesResponse;
 import com.nordeck.wiki.reader.model.RelatedResponse;
+import com.nordeck.wiki.reader.model.SearchResponse;
 import com.nordeck.wiki.reader.ui.ITopArticlesView;
 import com.nordeck.wiki.reader.ui.TopActivity;
 

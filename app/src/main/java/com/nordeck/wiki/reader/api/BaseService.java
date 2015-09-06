@@ -25,7 +25,7 @@ abstract class BaseService {
     protected RestAdapter.Builder getBuilder(String baseUrlPath) {
         return new RestAdapter.Builder()
                 .setEndpoint(baseUrlPath)
-                .setLogLevel(RestAdapter.LogLevel.BASIC);
+                .setLogLevel(RestAdapter.LogLevel.FULL);
     }
 
     protected abstract void initService(@NonNull RestAdapter restAdapter);

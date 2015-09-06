@@ -16,7 +16,7 @@ public class SearchResponse implements Parcelable {
     @SerializedName("total")
     private int total;
     @Expose
-    @SerializedName("total")
+    @SerializedName("batches")
     private int batches;
     @Expose
     @SerializedName("currentBatch")
