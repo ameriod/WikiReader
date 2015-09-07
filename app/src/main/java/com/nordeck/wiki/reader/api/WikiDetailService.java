@@ -39,7 +39,7 @@ public class WikiDetailService extends BaseService {
 
     private interface TopWikiWebService {
 
-        @GET("/api/v1/Wikis/List")
+        @GET("/api/v1/Wikis/Details")
         Observable<WikiDetail> fetchWikiDetail(@Query("ids") String id);
 
     }

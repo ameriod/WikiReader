@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -14,11 +15,14 @@ import android.view.MenuInflater;
 import android.view.View;
 
 import com.nordeck.wiki.reader.R;
+import com.nordeck.wiki.reader.SelectedWiki;
 import com.nordeck.wiki.reader.adapters.WikiTitleAdapter;
 import com.nordeck.wiki.reader.adapters.base.NdDividerItemDecoration;
 import com.nordeck.wiki.reader.adapters.base.RecyclerItemClickSupport;
 import com.nordeck.wiki.reader.model.Wiki;
+import com.nordeck.wiki.reader.model.WikiDetail;
 import com.nordeck.wiki.reader.model.WikiResponse;
+import com.nordeck.wiki.reader.presenters.WikiDetailPresenter;
 import com.nordeck.wiki.reader.presenters.WikiPresenter;
 
 import butterknife.Bind;
@@ -27,12 +31,15 @@ import butterknife.ButterKnife;
 /**
  * Created by parker on 9/6/15.
  */
-public class ActivityWikis extends BaseActivity implements IWikiView, RecyclerItemClickSupport.OnItemClickListener,
-        SearchView.OnQueryTextListener {
+public class ActivityWikis extends BaseActivity implements IWikiView, IWikiDetailView, RecyclerItemClickSupport
+        .OnItemClickListener, SearchView.OnQueryTextListener {
 
     private static final int MIN_SEARCH_LENGTH = 3;
 
     private WikiPresenter mPresenter;
+    private WikiDetailPresenter mDetailPresenter;
+
+    private boolean mIsSelectable;
 
     public static Intent getLaunchIntent(Context context) {
         Intent intent = new Intent(context, ActivityWikis.class);
@@ -67,10 +74,14 @@ public class ActivityWikis extends BaseActivity implements IWikiView, RecyclerIt
         mPresenter = new WikiPresenter();
         mPresenter.bindView(this);
         mPresenter.onCreate(savedInstanceState);
+        mDetailPresenter = new WikiDetailPresenter();
+        mDetailPresenter.bindView(this);
+        mDetailPresenter.onCreate(savedInstanceState);
 
         if (!TextUtils.isEmpty(mPresenter.getSearchQuery())) {
             mSearchView.setQuery(mPresenter.getSearchQuery(), false);
         }
+        mIsSelectable = true;
     }
 
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -98,6 +109,7 @@ public class ActivityWikis extends BaseActivity implements IWikiView, RecyclerIt
     protected void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
         mPresenter.onSaveInstanceState(outState);
+        mDetailPresenter.onSaveInstanceState(outState);
     }
 
     @Override
@@ -105,6 +117,8 @@ public class ActivityWikis extends BaseActivity implements IWikiView, RecyclerIt
         super.onDestroy();
         mPresenter.onDestroy();
         mPresenter.unbindView();
+        mDetailPresenter.onDestroy();
+        mDetailPresenter.unbindView();
         ButterKnife.unbind(this);
     }
 
@@ -112,6 +126,17 @@ public class ActivityWikis extends BaseActivity implements IWikiView, RecyclerIt
     public void displayError(@Nullable String error) {
         super.displayError(error);
         mAdapter.clear(true);
+    }
+
+    @Override
+    public void onWikiDetailFetched(@NonNull WikiDetail detail) {
+        DialogFragmentWikiDetail.newInstance(detail).show(getFragmentManager(), DialogFragmentWikiDetail.TAG);
+        mIsSelectable = true;
+    }
+
+    @Override
+    public void displayErrorWikiDetail(@NonNull String error) {
+        mIsSelectable = true;
     }
 
     @Override
@@ -126,9 +151,13 @@ public class ActivityWikis extends BaseActivity implements IWikiView, RecyclerIt
 
     @Override
     public boolean onItemClick(RecyclerView parent, View view, int position, long id) {
-        Wiki wiki = mAdapter.getItem(position);
-        // TODO impl saving of the wiki when
-        return true;
+        if (mIsSelectable) {
+            Wiki wiki = mAdapter.getItem(position);
+            mIsSelectable = false;
+            mDetailPresenter.fetchWikibyId(wiki.getId());
+            return true;
+        }
+        return false;
     }
 
     @Override

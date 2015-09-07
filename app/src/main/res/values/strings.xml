@@ -7,4 +7,7 @@
     <string name="action_search_wikis">Search Wikis</string>
 
     <string name="article_viewer_related">Read More</string>
+
+    <string name="wiki_detail_btn_pos">Select</string>
+    <string name="wiki_detail_btn_neg">Cancel</string>
 </resources>

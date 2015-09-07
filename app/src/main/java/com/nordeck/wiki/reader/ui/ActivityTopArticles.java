@@ -1,5 +1,8 @@
 package com.nordeck.wiki.reader.ui;
 
+import android.app.Activity;
+import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.LinearLayoutManager;
@@ -27,6 +30,15 @@ public class ActivityTopArticles extends BaseActivity implements ITopArticlesVie
         .OnItemClickListener {
 
     public static final String TEST_WIKIA = /*"http://starwars.wikia.com"*/ "http://muppet.wikia.com";
+
+    public static Intent getLaunchIntnet(Context context) {
+        Intent intent = new Intent(context, ActivityTopArticles.class);
+        return intent;
+    }
+
+    public static void launchActivity(Activity activity) {
+        activity.startActivity(getLaunchIntnet(activity));
+    }
 
     @Bind(R.id.recycler_view)
     RecyclerView mRecyclerView;

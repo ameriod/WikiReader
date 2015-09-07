@@ -225,14 +225,17 @@ public class WikiDetail implements Parcelable {
             JsonObject itemsObj = json.getAsJsonObject();
             for (Map.Entry<String, JsonElement> entry : itemsObj.entrySet()) {
                 JsonObject obj = entry.getValue().getAsJsonObject();
-                builder.id(obj.get("id").getAsString());
-                builder.wordmark(obj.get("wordmark").getAsString());
-                builder.title(obj.get("title").getAsString());
-                builder.url(obj.get("url").getAsString());
-                builder.headline(obj.get("headline").getAsString());
-                builder.lang(obj.get("lang").getAsString());
-                builder.desc(obj.get("desc").getAsString());
-                builder.image(obj.get("image").getAsString());
+                for (Map.Entry<String, JsonElement> item : obj.entrySet()) {
+                    JsonObject itemObj = item.getValue().getAsJsonObject();
+                    builder.id(itemObj.get("id").getAsString());
+                    builder.wordmark(itemObj.get("wordmark").getAsString());
+                    builder.title(itemObj.get("title").getAsString());
+                    builder.url(itemObj.get("url").getAsString());
+                    builder.headline(itemObj.get("headline").getAsString());
+                    builder.lang(itemObj.get("lang").getAsString());
+                    builder.desc(itemObj.get("desc").getAsString());
+                    builder.image(itemObj.get("image").getAsString());
+                }
             }
             return builder.build();
         }
