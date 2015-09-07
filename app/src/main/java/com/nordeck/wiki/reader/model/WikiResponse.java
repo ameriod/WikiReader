@@ -9,9 +9,9 @@ import com.google.gson.annotations.SerializedName;
 import java.util.List;
 
 /**
- * Created by parker on 9/5/15.
+ * Created by parker on 9/6/15.
  */
-public class SearchResponse implements Parcelable {
+public class WikiResponse implements Parcelable {
     @Expose
     @SerializedName("next")
     private int next;
@@ -26,41 +26,11 @@ public class SearchResponse implements Parcelable {
     private int currentBatch;
     @Expose
     @SerializedName("items")
-    private List<Page> items;
+    private List<Wiki> items;
 
-    protected SearchResponse(Parcel in) {
-        next = in.readInt();
-        total = in.readInt();
-        batches = in.readInt();
-        currentBatch = in.readInt();
-        items = in.createTypedArrayList(Page.CREATOR);
+    public int getNext() {
+        return next;
     }
-
-    @Override
-    public void writeToParcel(Parcel dest, int flags) {
-        dest.writeInt(next);
-        dest.writeInt(total);
-        dest.writeInt(batches);
-        dest.writeInt(currentBatch);
-        dest.writeTypedList(items);
-    }
-
-    @Override
-    public int describeContents() {
-        return 0;
-    }
-
-    public static final Creator<SearchResponse> CREATOR = new Creator<SearchResponse>() {
-        @Override
-        public SearchResponse createFromParcel(Parcel in) {
-            return new SearchResponse(in);
-        }
-
-        @Override
-        public SearchResponse[] newArray(int size) {
-            return new SearchResponse[size];
-        }
-    };
 
     public int getTotal() {
         return total;
@@ -74,23 +44,34 @@ public class SearchResponse implements Parcelable {
         return currentBatch;
     }
 
-    public List<Page> getItems() {
+    public List<Wiki> getItems() {
         return items;
     }
 
-    public int getNext() {
-        return next;
+    protected WikiResponse(Parcel in) {
+        items = in.createTypedArrayList(Wiki.CREATOR);
+    }
+
+    public static final Creator<WikiResponse> CREATOR = new Creator<WikiResponse>() {
+        @Override
+        public WikiResponse createFromParcel(Parcel in) {
+            return new WikiResponse(in);
+        }
+
+        @Override
+        public WikiResponse[] newArray(int size) {
+            return new WikiResponse[size];
+        }
+    };
+
+    @Override
+    public int describeContents() {
+        return 0;
     }
 
     @Override
-    public String toString() {
-        return "SearchResponse{" +
-                "next=" + next +
-                ", total=" + total +
-                ", batches=" + batches +
-                ", currentBatch=" + currentBatch +
-                ", items=" + items +
-                '}';
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeTypedList(items);
     }
 
     @Override
@@ -98,7 +79,7 @@ public class SearchResponse implements Parcelable {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
 
-        SearchResponse that = (SearchResponse) o;
+        WikiResponse that = (WikiResponse) o;
 
         if (next != that.next) return false;
         if (total != that.total) return false;
@@ -116,5 +97,16 @@ public class SearchResponse implements Parcelable {
         result = 31 * result + currentBatch;
         result = 31 * result + (items != null ? items.hashCode() : 0);
         return result;
+    }
+
+    @Override
+    public String toString() {
+        return "WikiTopResponse{" +
+                "next=" + next +
+                ", total=" + total +
+                ", batches=" + batches +
+                ", currentBatch=" + currentBatch +
+                ", items=" + items +
+                '}';
     }
 }

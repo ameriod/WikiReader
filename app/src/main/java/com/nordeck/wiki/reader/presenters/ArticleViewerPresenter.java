@@ -9,7 +9,7 @@ import com.nordeck.wiki.reader.api.RelatedArticleService;
 import com.nordeck.wiki.reader.model.ArticleResponse;
 import com.nordeck.wiki.reader.model.RelatedResponse;
 import com.nordeck.wiki.reader.ui.IArticleViewerView;
-import com.nordeck.wiki.reader.ui.ActivityTopArticles;
+import com.nordeck.wiki.reader.ui.ActivityTopPages;
 
 import rx.Subscriber;
 import timber.log.Timber;
@@ -25,6 +25,12 @@ public class ArticleViewerPresenter extends NdBasePresenter<IArticleViewerView> 
     private static final String OUT_STATE_ARTICLE_RESPONSE = "out_state_article_response";
     private static final String OUT_STATE_RELATED_RESPONSE = "out_state_related_response";
 
+
+    private String mBaseUrl;
+
+    public ArticleViewerPresenter(String baseUrl) {
+        this.mBaseUrl = baseUrl;
+    }
 
     @Override
     public void onCreate(@Nullable Bundle bundle) {
@@ -50,10 +56,10 @@ public class ArticleViewerPresenter extends NdBasePresenter<IArticleViewerView> 
         if (forceLoad || mResponse == null || mResponse.getSections() == null || mResponse.getSections().size() == 0) {
             getView().showProgressIndicator(true);
             // Do not flat map the responses since the related articles seems to be optional?
-            addToSubscriptions(new ArticleService(ActivityTopArticles.TEST_WIKIA)
+            addToSubscriptions(new ArticleService(mBaseUrl)
                     .getArticle(id)
                     .subscribe(new ArticleSubscriber()));
-            addToSubscriptions(new RelatedArticleService(ActivityTopArticles.TEST_WIKIA)
+            addToSubscriptions(new RelatedArticleService(mBaseUrl)
                     .getRelatedPages(id)
                     .subscribe(new RelatedSubscriber()));
         } else {

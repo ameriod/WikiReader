@@ -1,9 +1,15 @@
 <resources>
     <string name="app_name">WikiReader</string>
 
-    <string name="hello_world">Hello world!</string>
     <string name="action_settings">Settings</string>
     <string name="action_search_pages">Search Pages</string>
+    <string name="action_search_pages_hint">Search %s Pages</string>
+    <string name="action_search_wikis">Search Wikis</string>
+
+    <string name="title_top">%s - Top</string>
 
     <string name="article_viewer_related">Read More</string>
+
+    <string name="wiki_detail_btn_pos">Select</string>
+    <string name="wiki_detail_btn_neg">Cancel</string>
 </resources>

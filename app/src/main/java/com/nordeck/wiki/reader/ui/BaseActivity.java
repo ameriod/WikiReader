@@ -8,16 +8,18 @@ import android.view.View;
 import android.widget.Toast;
 
 import com.nordeck.wiki.reader.R;
+import com.nordeck.wiki.reader.Utils;
+import com.nordeck.wiki.reader.presenters.NdView;
 
 /**
  * Created by parker on 9/4/15.
  */
-public class BaseActivity extends AppCompatActivity {
+public abstract class BaseActivity extends AppCompatActivity implements NdView {
 
     private Toolbar mToolbar;
     protected View mLoading;
 
-    protected void displayErrorMessage(@Nullable String message) {
+    protected void showToastMessage(@Nullable String message) {
         if (!TextUtils.isEmpty(message)) {
             Toast.makeText(getApplicationContext(), message, Toast.LENGTH_SHORT).show();
         }
@@ -27,5 +29,19 @@ public class BaseActivity extends AppCompatActivity {
         mToolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(mToolbar);
         mLoading = findViewById(R.id.loading);
+    }
+
+    public Toolbar getToolbar() {
+        return mToolbar;
+    }
+
+    @Override
+    public void showProgressIndicator(boolean show) {
+        Utils.setViewVisibility(mLoading, show);
+    }
+
+    @Override
+    public void displayError(@Nullable String error) {
+        showToastMessage(error);
     }
 }

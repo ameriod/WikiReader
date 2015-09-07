@@ -7,7 +7,7 @@ import android.support.annotation.Nullable;
 import com.nordeck.wiki.reader.api.SearchArticlesService;
 import com.nordeck.wiki.reader.model.SearchResponse;
 import com.nordeck.wiki.reader.ui.ISearchPagesView;
-import com.nordeck.wiki.reader.ui.ActivityTopArticles;
+import com.nordeck.wiki.reader.ui.ActivityTopPages;
 
 import rx.Subscriber;
 import timber.log.Timber;
@@ -19,6 +19,7 @@ public class SearchPagePresenter extends NdBasePresenter<ISearchPagesView> {
 
     private String mSearchQuery;
     private SearchResponse mResponse;
+    private String mBaseUrl;
 
     private static final String OUT_STATE_SEARCH_RESPONSE = "out_state_search_response";
     private static final String OUT_STATE_SEARCH_QUERY = "out_state_search_query";
@@ -29,6 +30,10 @@ public class SearchPagePresenter extends NdBasePresenter<ISearchPagesView> {
 
     public SearchResponse getResponse() {
         return mResponse;
+    }
+
+    public SearchPagePresenter(String baseUrl) {
+        this.mBaseUrl = baseUrl;
     }
 
     @Override
@@ -52,7 +57,7 @@ public class SearchPagePresenter extends NdBasePresenter<ISearchPagesView> {
     public void fetchSearchResults(@NonNull String query) {
         mSearchQuery = query;
         getView().showProgressIndicator(true);
-        addToSubscriptions(new SearchArticlesService(ActivityTopArticles.TEST_WIKIA)
+        addToSubscriptions(new SearchArticlesService(mBaseUrl)
                 .getSearchResults(query)
                 .subscribe(new SearchSubscriber()));
     }

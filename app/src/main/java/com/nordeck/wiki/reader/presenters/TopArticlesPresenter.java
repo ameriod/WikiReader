@@ -7,7 +7,7 @@ import android.support.annotation.Nullable;
 import com.nordeck.wiki.reader.api.TopArticlesService;
 import com.nordeck.wiki.reader.model.PagesResponse;
 import com.nordeck.wiki.reader.ui.ITopArticlesView;
-import com.nordeck.wiki.reader.ui.ActivityTopArticles;
+import com.nordeck.wiki.reader.ui.ActivityTopPages;
 
 import rx.Subscriber;
 import timber.log.Timber;
@@ -21,12 +21,18 @@ public class TopArticlesPresenter extends NdBasePresenter<ITopArticlesView> {
 
     private static final String OUT_STATE_RESPONSE = "out_state_response";
 
+    private String mBaseUrl;
+
+    public TopArticlesPresenter(String baseUrl) {
+        this.mBaseUrl = baseUrl;
+    }
+
     public void fetchTopArticles(boolean forceLoad) {
         if (mResponse != null && mResponse.getItems() != null && mResponse.getItems().size() > 0 && !forceLoad) {
             getView().onTopArticlesFetched(mResponse);
         } else {
             getView().showProgressIndicator(true);
-            addToSubscriptions(new TopArticlesService(ActivityTopArticles.TEST_WIKIA).getTopArticlesExpanded()
+            addToSubscriptions(new TopArticlesService(mBaseUrl).getTopArticlesExpanded()
                     .subscribe(new TopArticlesSubscriber()));
         }
     }

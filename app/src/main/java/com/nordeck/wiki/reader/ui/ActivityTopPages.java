@@ -1,7 +1,9 @@
 package com.nordeck.wiki.reader.ui;
 
+import android.app.Activity;
+import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
-import android.support.annotation.Nullable;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.Menu;
@@ -10,7 +12,7 @@ import android.view.MenuItem;
 import android.view.View;
 
 import com.nordeck.wiki.reader.R;
-import com.nordeck.wiki.reader.Utils;
+import com.nordeck.wiki.reader.SelectedWiki;
 import com.nordeck.wiki.reader.adapters.PageDetailAdapter;
 import com.nordeck.wiki.reader.model.IPage;
 import com.nordeck.wiki.reader.model.PagesResponse;
@@ -23,10 +25,17 @@ import java.util.ArrayList;
 import butterknife.Bind;
 import butterknife.ButterKnife;
 
-public class ActivityTopArticles extends BaseActivity implements ITopArticlesView, RecyclerItemClickSupport
+public class ActivityTopPages extends BaseActivity implements ITopArticlesView, RecyclerItemClickSupport
         .OnItemClickListener {
 
-    public static final String TEST_WIKIA = /*"http://starwars.wikia.com"*/ "http://muppet.wikia.com";
+    public static Intent getLaunchIntent(Context context) {
+        Intent intent = new Intent(context, ActivityTopPages.class);
+        return intent;
+    }
+
+    public static void launchActivity(Activity activity) {
+        activity.startActivity(getLaunchIntent(activity));
+    }
 
     @Bind(R.id.recycler_view)
     RecyclerView mRecyclerView;
@@ -49,9 +58,12 @@ public class ActivityTopArticles extends BaseActivity implements ITopArticlesVie
         mAdapter = new PageDetailAdapter(this);
         mRecyclerView.setAdapter(mAdapter);
 
-        mPresenter = new TopArticlesPresenter();
+        mPresenter = new TopArticlesPresenter((SelectedWiki.getInstance().getSelectedWiki().getUrl()));
         mPresenter.bindView(this);
         mPresenter.onCreate(savedInstanceState);
+
+        getSupportActionBar().setTitle(getString(R.string.title_top, SelectedWiki.getInstance().getSelectedWiki()
+                .getTitle()));
     }
 
     @Override
@@ -99,16 +111,6 @@ public class ActivityTopArticles extends BaseActivity implements ITopArticlesVie
     @Override
     public void onTopArticlesFetched(PagesResponse response) {
         mAdapter.addAll(new ArrayList<IPage>(response.getItems()), true);
-    }
-
-    @Override
-    public void showProgressIndicator(boolean show) {
-        Utils.setViewVisibility(mLoading, show);
-    }
-
-    @Override
-    public void displayError(@Nullable String error) {
-        displayErrorMessage(error);
     }
 
     @Override
