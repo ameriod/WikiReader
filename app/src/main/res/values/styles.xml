@@ -1,3 +1,17 @@
 <resources>
 
+    <style name="DrawerView">
+        <item name="android:layout_width">@dimen/drawer_width</item>
+        <item name="android:layout_height">match_parent</item>
+        <item name="android:background">@color/background_material_light</item>
+        <item name="android:clickable">true</item>
+    </style>
+
+    <style name="DrawerView.Left">
+        <item name="android:layout_gravity">start|left</item>
+    </style>
+
+    <style name="DrawerView.Right">
+        <item name="android:layout_gravity">end|right</item>
+    </style>
 </resources>

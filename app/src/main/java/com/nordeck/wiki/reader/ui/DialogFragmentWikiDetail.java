@@ -53,7 +53,7 @@ public class DialogFragmentWikiDetail extends DialogFragment implements DialogIn
 
     public View getView(WikiDetail detail) {
         View v = LayoutInflater.from(getActivity()).inflate(R.layout.dialog_wiki_detail, null, false);
-        ImageView iv = (ImageView) v.findViewById(R.id.wiki_iv_wordmark);
+        ImageView iv = (ImageView) v.findViewById(R.id.wiki_iv_logo);
         TextView tvTitle = (TextView) v.findViewById(R.id.wiki_tv_title);
         TextView tvUrl = (TextView) v.findViewById(R.id.wiki_tv_url);
         TextView tvDesc = (TextView) v.findViewById(R.id.wiki_tv_desc);

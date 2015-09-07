@@ -5,7 +5,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -13,7 +12,6 @@ import android.view.View;
 
 import com.nordeck.wiki.reader.R;
 import com.nordeck.wiki.reader.SelectedWiki;
-import com.nordeck.wiki.reader.Utils;
 import com.nordeck.wiki.reader.adapters.ContentViewerAdapter;
 import com.nordeck.wiki.reader.adapters.SectionNavAdapter;
 import com.nordeck.wiki.reader.adapters.base.NdDividerItemDecoration;
@@ -39,10 +37,7 @@ public class ActivityArticleViewer extends BaseActivity implements IArticleViewe
         .OnItemClickListener, ContentViewerAdapter.OnClickRelatedArticleListener {
 
     private static final String EXTRA_ARTICLE_ID = "extra_article_id";
-    @Bind(R.id.drawer_layout)
-    DrawerLayout mDrawer;
-    @Bind(R.id.sections_drawer_recycler_view)
-    RecyclerView mSectionsNavRecyclerView;
+
     @Bind(R.id.recycler_view)
     RecyclerView mRecyclerView;
 
@@ -71,6 +66,7 @@ public class ActivityArticleViewer extends BaseActivity implements IArticleViewe
         setContentView(R.layout.activity_content_view);
         ButterKnife.bind(this);
         setupActionBar();
+        setupDrawers();
 
         mId = getIntent().getStringExtra(EXTRA_ARTICLE_ID);
 
@@ -80,15 +76,15 @@ public class ActivityArticleViewer extends BaseActivity implements IArticleViewe
         mRecyclerView.setLayoutManager(mContentLayoutManager);
         mContentAdapter = new ContentViewerAdapter(this, this);
         mRecyclerView.setAdapter(mContentAdapter);
-        // Section nav adapter
+        // Section nav adapter which is in the right drawer
         mNavLayoutManager = new LinearLayoutManager(getApplicationContext());
         mNavLayoutManager.setOrientation(LinearLayoutManager.VERTICAL);
-        mSectionsNavRecyclerView.setLayoutManager(mNavLayoutManager);
-        mSectionsNavRecyclerView.addItemDecoration(new NdDividerItemDecoration(this, NdDividerItemDecoration
+        getRightDrawer().setLayoutManager(mNavLayoutManager);
+        getRightDrawer().addItemDecoration(new NdDividerItemDecoration(this, NdDividerItemDecoration
                 .VERTICAL_LIST));
-        RecyclerItemClickSupport.addTo(mSectionsNavRecyclerView).setOnItemClickListener(this);
+        RecyclerItemClickSupport.addTo(getRightDrawer()).setOnItemClickListener(this);
         mNavAdapter = new SectionNavAdapter(this);
-        mSectionsNavRecyclerView.setAdapter(mNavAdapter);
+        getRightDrawer().setAdapter(mNavAdapter);
 
         // Keep both lists in sync with each other
         mRecyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
@@ -153,7 +149,7 @@ public class ActivityArticleViewer extends BaseActivity implements IArticleViewe
                 .padding));
         // Set the position on the adapter, then close the drawer so the user can read the new content, and center
         // the item
-        mDrawer.closeDrawer(mSectionsNavRecyclerView);
+        getDrawerLayout().closeDrawer(getRightDrawer());
         // TODO when closing the drawer the user can see the animation of the view moving
         mNavAdapter.setCurrentPosition(position);
         centerNavListOnSelectedPos(position);
@@ -167,7 +163,7 @@ public class ActivityArticleViewer extends BaseActivity implements IArticleViewe
 
     private void centerNavListOnSelectedPos(int selectedPos) {
         mNavLayoutManager.scrollToPositionWithOffset(selectedPos,
-                mSectionsNavRecyclerView.getHeight() / 2 - getResources().getDimensionPixelOffset(R
+                getRightDrawer().getHeight() / 2 - getResources().getDimensionPixelOffset(R
                         .dimen.default_touch_target));
     }
 

@@ -19,9 +19,10 @@
     </LinearLayout>
 
     <android.support.v7.widget.RecyclerView
-        android:id="@+id/sections_drawer_recycler_view"
-        android:layout_width="@dimen/content_sections_drawer_width"
-        android:layout_height="match_parent"
-        android:layout_gravity="end|right"
-        android:background="@color/background_material_light"/>
+        android:id="@+id/drawer_left"
+        style="@style/DrawerView.Left"/>
+
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/drawer_right"
+        style="@style/DrawerView.Right"/>
 </android.support.v4.widget.DrawerLayout>

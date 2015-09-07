@@ -1,6 +1,9 @@
 <resources>
     <string name="app_name">WikiReader</string>
 
+    <string name="drawer_open">Drawer Open</string>
+    <string name="drawer_close">Drawer Close</string>
+
     <string name="action_settings">Settings</string>
     <string name="action_search_pages">Search Pages</string>
     <string name="action_search_pages_hint">Search %s Pages</string>
@@ -12,4 +15,6 @@
 
     <string name="wiki_detail_btn_pos">Select</string>
     <string name="wiki_detail_btn_neg">Cancel</string>
+
+    <string name="nav_chose_new_wiki">New Wiki</string>
 </resources>

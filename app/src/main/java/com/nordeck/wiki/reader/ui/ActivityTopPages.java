@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.Menu;
@@ -49,6 +50,7 @@ public class ActivityTopPages extends BaseActivity implements ITopArticlesView, 
         setContentView(R.layout.activity_main);
         ButterKnife.bind(this);
         setupActionBar();
+        setupDrawers();
 
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getApplicationContext());
         linearLayoutManager.setOrientation(LinearLayoutManager.VERTICAL);
