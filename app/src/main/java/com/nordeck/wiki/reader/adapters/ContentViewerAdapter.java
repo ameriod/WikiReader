@@ -218,9 +218,12 @@ public class ContentViewerAdapter extends NdBaseRecyclerAdapter<ISection, Recycl
     @Override
     public void onClick(View v) {
         if (v instanceof ImageView) {
-            String caption = v.getTag().toString();
-            if (!TextUtils.isEmpty(caption)) {
-                Toast.makeText(context.getApplicationContext(), caption, Toast.LENGTH_SHORT).show();
+            Object tag = v.getTag();
+            if (tag != null) {
+                String caption = v.getTag().toString();
+                if (!TextUtils.isEmpty(caption)) {
+                    Toast.makeText(context.getApplicationContext(), caption, Toast.LENGTH_SHORT).show();
+                }
             }
         } else if (v.getTag() instanceof PageRelated) {
             IPage page = (PageRelated) v.getTag();

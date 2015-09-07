@@ -24,7 +24,7 @@ public class PreferenceUtils {
     public static void setSelectedWiki(Context context, @Nullable WikiDetail wiki) {
         if (wiki != null) {
             try {
-                getEditor(context).putString(KEY_SELECTED_WIKI_JSON, new Gson().toJson(wiki));
+                getEditor(context).putString(KEY_SELECTED_WIKI_JSON, new Gson().toJson(wiki)).commit();
             } catch (JsonParseException e) {
                 getEditor(context).putString(KEY_SELECTED_WIKI_JSON, "");
             }

@@ -21,13 +21,17 @@
             android:name=".ui.ActivitySearchPages"/>
 
         <activity
-            android:name=".ui.ActivityWikis">
+            android:name=".ui.ActivityWikis"/>
+
+        <activity android:name=".ui.ActivitySplash">
+
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>
 
                 <category android:name="android.intent.category.LAUNCHER"/>
             </intent-filter>
         </activity>
+
     </application>
 
 </manifest>
