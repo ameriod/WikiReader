@@ -102,16 +102,6 @@ public class ActivityTopArticles extends BaseActivity implements ITopArticlesVie
     }
 
     @Override
-    public void showProgressIndicator(boolean show) {
-        Utils.setViewVisibility(mLoading, show);
-    }
-
-    @Override
-    public void displayError(@Nullable String error) {
-        displayErrorMessage(error);
-    }
-
-    @Override
     public boolean onItemClick(RecyclerView parent, View view, int position, long id) {
         IPage article = mAdapter.getItem(position);
         ActivityArticleViewer.launchActivity(this, article.getId());

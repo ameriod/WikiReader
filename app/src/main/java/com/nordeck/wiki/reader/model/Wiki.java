@@ -9,7 +9,7 @@ import com.google.gson.annotations.SerializedName;
 /**
  * Created by parker on 9/6/15.
  */
-public class Wiki implements Parcelable{
+public class Wiki implements Parcelable {
     @Expose
     @SerializedName("id")
     private String id;
@@ -29,6 +29,29 @@ public class Wiki implements Parcelable{
     @SerializedName("domain")
     private String domain;
 
+    public String getId() {
+        return id;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public String getHub() {
+        return hub;
+    }
+
+    public String getLanguage() {
+        return language;
+    }
+
+    public String getTopic() {
+        return topic;
+    }
+
+    public String getDomain() {
+        return domain;
+    }
 
     @Override
     public int describeContents() {

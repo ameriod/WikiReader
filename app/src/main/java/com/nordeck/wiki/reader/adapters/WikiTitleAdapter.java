@@ -8,13 +8,13 @@ import android.widget.TextView;
 
 import com.nordeck.wiki.reader.R;
 import com.nordeck.wiki.reader.adapters.base.NdBaseRecyclerAdapter;
-import com.nordeck.wiki.reader.model.IPage;
+import com.nordeck.wiki.reader.model.Wiki;
 
 /**
  * Created by parker on 9/4/15.
  */
-public class PageTitleAdapter extends NdBaseRecyclerAdapter<IPage, PageTitleAdapter.ItemViewHolder> {
-    public PageTitleAdapter(Context context) {
+public class WikiTitleAdapter extends NdBaseRecyclerAdapter<Wiki, WikiTitleAdapter.ItemViewHolder> {
+    public WikiTitleAdapter(Context context) {
         super(context);
     }
 
@@ -26,7 +26,7 @@ public class PageTitleAdapter extends NdBaseRecyclerAdapter<IPage, PageTitleAdap
 
     @Override
     public void onBindViewHolder(ItemViewHolder holder, int position) {
-        holder.tvName.setText(getItem(position).getTitle());
+        holder.tvName.setText(getItem(position).getName());
     }
 
     class ItemViewHolder extends RecyclerView.ViewHolder {

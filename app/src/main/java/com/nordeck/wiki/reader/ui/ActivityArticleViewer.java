@@ -144,16 +144,6 @@ public class ActivityArticleViewer extends BaseActivity implements IArticleViewe
     }
 
     @Override
-    public void showProgressIndicator(boolean show) {
-        Utils.setViewVisibility(mLoading, show);
-    }
-
-    @Override
-    public void displayError(@Nullable String error) {
-        displayErrorMessage(error);
-    }
-
-    @Override
     public boolean onItemClick(RecyclerView parent, View view, int position, long id) {
         // move the content to the selection section
         mContentLayoutManager.scrollToPositionWithOffset(position, getResources().getDimensionPixelOffset(R.dimen
