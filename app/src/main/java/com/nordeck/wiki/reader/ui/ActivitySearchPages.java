@@ -14,6 +14,7 @@ import android.view.MenuInflater;
 import android.view.View;
 
 import com.nordeck.wiki.reader.R;
+import com.nordeck.wiki.reader.SelectedWiki;
 import com.nordeck.wiki.reader.adapters.PageTitleAdapter;
 import com.nordeck.wiki.reader.adapters.base.NdDividerItemDecoration;
 import com.nordeck.wiki.reader.adapters.base.RecyclerItemClickSupport;
@@ -68,7 +69,7 @@ public class ActivitySearchPages extends BaseActivity implements ISearchPagesVie
         mAdapter = new PageTitleAdapter(this);
         mRecyclerView.setAdapter(mAdapter);
 
-        mPresenter = new SearchPagePresenter();
+        mPresenter = new SearchPagePresenter(SelectedWiki.getInstance().getSelectedWiki().getUrl());
         mPresenter.bindView(this);
         mPresenter.onCreate(savedInstanceState);
 
@@ -81,7 +82,8 @@ public class ActivitySearchPages extends BaseActivity implements ISearchPagesVie
         MenuInflater menuInflater = getMenuInflater();
         menuInflater.inflate(R.menu.menu_search_page, menu);
         mSearchView = (SearchView) menu.findItem(R.id.action_search).getActionView();
-        mSearchView.setQueryHint(getString(R.string.action_search_pages));
+        mSearchView.setQueryHint(getString(R.string.action_search_pages_hint, SelectedWiki.getInstance()
+                .getSelectedWiki().getTitle()));
         mSearchView.onActionViewExpanded();
         if (!TextUtils.isEmpty(mPresenter.getSearchQuery())) {
             mSearchView.setQuery(mPresenter.getSearchQuery(), false);

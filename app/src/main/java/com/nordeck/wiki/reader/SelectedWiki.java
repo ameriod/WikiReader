@@ -31,7 +31,7 @@ public class SelectedWiki {
         PreferenceUtils.setSelectedWiki(context.getApplicationContext(), selectedWiki);
     }
 
-    public static WikiDetail getSelectedWiki() {
+    public WikiDetail getSelectedWiki() {
         return selectedWiki;
     }
 }

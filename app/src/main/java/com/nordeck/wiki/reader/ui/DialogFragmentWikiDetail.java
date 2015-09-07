@@ -1,6 +1,5 @@
 package com.nordeck.wiki.reader.ui;
 
-import android.app.Activity;
 import android.app.Dialog;
 import android.app.DialogFragment;
 import android.content.DialogInterface;
@@ -76,7 +75,7 @@ public class DialogFragmentWikiDetail extends DialogFragment implements DialogIn
             dialog.dismiss();
         } else if (which == DialogInterface.BUTTON_POSITIVE) {
             SelectedWiki.getInstance().setSelectedWiki(mDetail, getActivity().getApplicationContext());
-            ActivityTopArticles.launchActivity(getActivity());
+            ActivityTopPages.launchActivity(getActivity());
         }
     }
 }

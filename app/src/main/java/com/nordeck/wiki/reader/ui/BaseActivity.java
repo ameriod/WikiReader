@@ -31,6 +31,10 @@ public abstract class BaseActivity extends AppCompatActivity implements NdView {
         mLoading = findViewById(R.id.loading);
     }
 
+    public Toolbar getToolbar() {
+        return mToolbar;
+    }
+
     @Override
     public void showProgressIndicator(boolean show) {
         Utils.setViewVisibility(mLoading, show);

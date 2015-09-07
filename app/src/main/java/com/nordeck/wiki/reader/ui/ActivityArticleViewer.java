@@ -12,6 +12,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.View;
 
 import com.nordeck.wiki.reader.R;
+import com.nordeck.wiki.reader.SelectedWiki;
 import com.nordeck.wiki.reader.Utils;
 import com.nordeck.wiki.reader.adapters.ContentViewerAdapter;
 import com.nordeck.wiki.reader.adapters.SectionNavAdapter;
@@ -104,9 +105,11 @@ public class ActivityArticleViewer extends BaseActivity implements IArticleViewe
                 }
             }
         });
-        mPresenter = new ArticleViewerPresenter();
+        mPresenter = new ArticleViewerPresenter((SelectedWiki.getInstance().getSelectedWiki().getUrl()));
         mPresenter.bindView(this);
         mPresenter.onCreate(savedInstanceState);
+
+        getSupportActionBar().setTitle(SelectedWiki.getInstance().getSelectedWiki().getTitle());
     }
 
     @Override

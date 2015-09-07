@@ -15,6 +15,7 @@ import rx.Observable;
 public class TopArticlesService extends BaseService {
 
     private TopWebService mWebService;
+    private static final int LIMIT = 100;
 
     public TopArticlesService(String baseUrlPath) {
         super(baseUrlPath);
@@ -28,10 +29,10 @@ public class TopArticlesService extends BaseService {
     private interface TopWebService {
 
         @GET("/api/v1/Articles/Top/")
-        Observable<PagesResponse> fetchTopArticles();
+        Observable<PagesResponse> fetchTopArticles(@Query("limit") int limit);
 
         @GET("/api/v1/Articles/Top/")
-        Observable<PagesResponse> fetchTopArticlesExpanded(@Query("expand") String expand);
+        Observable<PagesResponse> fetchTopArticlesExpanded(@Query("expand") String expand, @Query("limit") int limit);
     }
 
 
@@ -41,7 +42,7 @@ public class TopArticlesService extends BaseService {
      * @return
      */
     public Observable<PagesResponse> getTopArticles() {
-        return makeAsync(mWebService.fetchTopArticles());
+        return makeAsync(mWebService.fetchTopArticles(LIMIT));
     }
 
     /**
@@ -50,6 +51,6 @@ public class TopArticlesService extends BaseService {
      * @return
      */
     public Observable<PagesResponse> getTopArticlesExpanded() {
-        return makeAsync(mWebService.fetchTopArticlesExpanded("1"));
+        return makeAsync(mWebService.fetchTopArticlesExpanded("1", LIMIT));
     }
 }
