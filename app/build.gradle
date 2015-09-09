@@ -29,6 +29,7 @@ dependencies {
     compile 'com.jakewharton.timber:timber:3.1.0'
     compile 'com.jakewharton:butterknife:7.0.1'
     compile 'com.github.castorflex.smoothprogressbar:library:1.1.0'
+    compile 'de.greenrobot:eventbus:2.4.0'
 
     // Rx stuff
     compile 'io.reactivex:rxjava:1.0.14'

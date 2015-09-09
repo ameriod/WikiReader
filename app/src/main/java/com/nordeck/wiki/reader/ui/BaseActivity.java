@@ -103,7 +103,9 @@ public abstract class BaseActivity extends AppCompatActivity implements NdView, 
 
     @Override
     public void onNavItemSelected(@NonNull String item) {
-        ActivityWikis.launchActivity(this);
+        if (TextUtils.equals(item, getString(R.string.nav_chose_new_wiki))) {
+            ActivityWikis.launchActivity(this);
+        }
     }
 
     @Override

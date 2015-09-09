@@ -1,9 +1,11 @@
 package com.nordeck.wiki.reader.ui;
 
+import android.app.Activity;
 import android.app.Dialog;
 import android.app.DialogFragment;
 import android.content.DialogInterface;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.v7.app.AlertDialog;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
@@ -13,6 +15,7 @@ import android.widget.TextView;
 
 import com.nordeck.wiki.reader.R;
 import com.nordeck.wiki.reader.SelectedWiki;
+import com.nordeck.wiki.reader.model.Wiki;
 import com.nordeck.wiki.reader.model.WikiDetail;
 import com.squareup.picasso.Picasso;
 
@@ -24,14 +27,26 @@ public class DialogFragmentWikiDetail extends DialogFragment implements DialogIn
 
     private static final String EXTRA_WIKI_DETAIL = "extra_wiki_detail";
 
+    public interface OnWikiSelectedListener {
+        void onWikiSelected(WikiDetail wiki);
+    }
+
+    private OnWikiSelectedListener mListener;
+
     private WikiDetail mDetail;
 
-    public static DialogFragmentWikiDetail newInstance(WikiDetail detail) {
+    public static DialogFragmentWikiDetail newInstance(@NonNull WikiDetail detail, @NonNull OnWikiSelectedListener
+            listener) {
         DialogFragmentWikiDetail fragment = new DialogFragmentWikiDetail();
+        fragment.setListener(listener);
         Bundle args = new Bundle();
         args.putParcelable(EXTRA_WIKI_DETAIL, detail);
         fragment.setArguments(args);
         return fragment;
+    }
+
+    public void setListener(OnWikiSelectedListener listener) {
+        this.mListener = listener;
     }
 
     @Override
@@ -74,8 +89,7 @@ public class DialogFragmentWikiDetail extends DialogFragment implements DialogIn
         if (which == DialogInterface.BUTTON_NEGATIVE) {
             dialog.dismiss();
         } else if (which == DialogInterface.BUTTON_POSITIVE) {
-            SelectedWiki.getInstance().setSelectedWiki(mDetail, getActivity().getApplicationContext());
-            ActivityTopPages.launchActivity(getActivity());
+            mListener.onWikiSelected(mDetail);
         }
     }
 }

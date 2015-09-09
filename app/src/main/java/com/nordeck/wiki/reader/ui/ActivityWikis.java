@@ -27,12 +27,13 @@ import com.nordeck.wiki.reader.presenters.WikiPresenter;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
+import de.greenrobot.event.EventBus;
 
 /**
  * Created by parker on 9/6/15.
  */
 public class ActivityWikis extends BaseActivity implements IWikiView, IWikiDetailView, RecyclerItemClickSupport
-        .OnItemClickListener, SearchView.OnQueryTextListener {
+        .OnItemClickListener, SearchView.OnQueryTextListener, DialogFragmentWikiDetail.OnWikiSelectedListener {
 
     private static final int MIN_SEARCH_LENGTH = 3;
 
@@ -59,7 +60,7 @@ public class ActivityWikis extends BaseActivity implements IWikiView, IWikiDetai
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
+        setContentView(R.layout.activity_select_wiki);
         ButterKnife.bind(this);
         setupActionBar();
 
@@ -130,8 +131,20 @@ public class ActivityWikis extends BaseActivity implements IWikiView, IWikiDetai
 
     @Override
     public void onWikiDetailFetched(@NonNull WikiDetail detail) {
-        DialogFragmentWikiDetail.newInstance(detail).show(getFragmentManager(), DialogFragmentWikiDetail.TAG);
+        DialogFragmentWikiDetail.newInstance(detail, this).show(getFragmentManager(), DialogFragmentWikiDetail.TAG);
         mIsSelectable = true;
+    }
+
+    @Override
+    public void onWikiSelected(WikiDetail wiki) {
+        // Set the selected wiki
+        SelectedWiki.getInstance().setSelectedWiki(wiki, getApplicationContext());
+        Intent intent = ActivityTopPages.getLaunchIntent(getApplicationContext());
+        // Remove clear all activities to remove the old wiki stuff in the back stack.
+        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
+        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+        startActivity(intent);
+        finish();
     }
 
     @Override

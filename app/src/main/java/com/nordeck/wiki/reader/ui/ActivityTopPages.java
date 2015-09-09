@@ -4,7 +4,6 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.Menu;
@@ -15,11 +14,11 @@ import android.view.View;
 import com.nordeck.wiki.reader.R;
 import com.nordeck.wiki.reader.SelectedWiki;
 import com.nordeck.wiki.reader.adapters.PageDetailAdapter;
+import com.nordeck.wiki.reader.adapters.base.NdDividerItemDecoration;
+import com.nordeck.wiki.reader.adapters.base.RecyclerItemClickSupport;
 import com.nordeck.wiki.reader.model.IPage;
 import com.nordeck.wiki.reader.model.PagesResponse;
 import com.nordeck.wiki.reader.presenters.TopArticlesPresenter;
-import com.nordeck.wiki.reader.adapters.base.NdDividerItemDecoration;
-import com.nordeck.wiki.reader.adapters.base.RecyclerItemClickSupport;
 
 import java.util.ArrayList;
 
@@ -77,6 +76,10 @@ public class ActivityTopPages extends BaseActivity implements ITopArticlesView, 
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
+        boolean selected = super.onOptionsItemSelected(item);
+        if (selected) {
+            return selected;
+        }
         // Handle item selection
         switch (item.getItemId()) {
             case R.id.action_settings:
@@ -121,4 +124,5 @@ public class ActivityTopPages extends BaseActivity implements ITopArticlesView, 
         ActivityArticleViewer.launchActivity(this, article.getId());
         return true;
     }
+
 }
