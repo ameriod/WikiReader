@@ -1,6 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string-array name="wiki_nav_list">
+        <item>@string/nav_chose_today</item>
+        <item>@string/nav_chose_top</item>
+        <item>@string/nav_chose_random</item>
         <item>@string/nav_chose_new_wiki</item>
     </string-array>
 </resources>

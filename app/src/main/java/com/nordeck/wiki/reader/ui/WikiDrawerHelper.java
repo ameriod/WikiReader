@@ -16,7 +16,9 @@ import com.nordeck.wiki.reader.adapters.WikiNavAdapter;
 import com.nordeck.wiki.reader.adapters.base.NdDividerItemDecoration;
 import com.nordeck.wiki.reader.adapters.base.RecyclerItemClickSupport;
 
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 
 /**
  * Created by parker on 9/7/15.
@@ -54,8 +56,11 @@ public class WikiDrawerHelper implements RecyclerItemClickSupport.OnItemClickLis
             RecyclerItemClickSupport.addTo(mLeftDrawer).setOnItemClickListener(this);
             mNavAdapter = new WikiNavAdapter(activity);
             mLeftDrawer.setAdapter(mNavAdapter);
-            mNavAdapter.addAll(Arrays.asList(activity.getApplication().getResources().getStringArray(R.array
-                    .wiki_nav_list)), true);
+            ArrayList<String> navItems = new ArrayList<>(Arrays.asList(activity.getApplication().getResources()
+                    .getStringArray(R.array.wiki_nav_list)));
+            // account for the header
+            navItems.add(0, null);
+            mNavAdapter.addAll(navItems, true);
         }
     }
 

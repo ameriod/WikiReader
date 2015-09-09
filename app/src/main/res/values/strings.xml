@@ -16,5 +16,8 @@
     <string name="wiki_detail_btn_pos">Select</string>
     <string name="wiki_detail_btn_neg">Cancel</string>
 
-    <string name="nav_chose_new_wiki">New Wiki</string>
+    <string name="nav_chose_new_wiki">Select New Wiki</string>
+    <string name="nav_chose_random">Random</string>
+    <string name="nav_chose_today">Today</string>
+    <string name="nav_chose_top">Top Pages</string>
 </resources>

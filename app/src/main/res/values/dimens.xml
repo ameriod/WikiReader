@@ -18,5 +18,5 @@
     <dimen name="drawer_width">240dp</dimen>
     <dimen name="related_article_iv_width">48dp</dimen>
 
-    <dimen name="wiki_detail_min_image_height">120dp</dimen>
+    <dimen name="wiki_detail_min_image_height">128dp</dimen>
 </resources>
