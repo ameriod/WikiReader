@@ -10,7 +10,6 @@ import com.nordeck.wiki.reader.api.RelatedArticleService;
 import com.nordeck.wiki.reader.model.ArticleResponse;
 import com.nordeck.wiki.reader.model.RelatedResponse;
 import com.nordeck.wiki.reader.ui.IArticleViewerView;
-import com.nordeck.wiki.reader.ui.ActivityTopPages;
 
 import rx.Subscriber;
 import timber.log.Timber;
@@ -62,7 +61,7 @@ public class ArticleViewerPresenter extends NdBasePresenter<IArticleViewerView> 
             getView().showProgressIndicator(true);
             addToSubscriptions(new ArticleService(mBaseUrl)
                     .getRandomArticle()
-                    .subscribe(new RandomSubscrber()));
+                    .subscribe(new RandomSubscriber()));
         } else {
             fetchArticle(mId, forceLoad);
         }
@@ -128,7 +127,7 @@ public class ArticleViewerPresenter extends NdBasePresenter<IArticleViewerView> 
         }
     }
 
-    private class RandomSubscrber extends Subscriber<ArticleResponse> {
+    private class RandomSubscriber extends Subscriber<ArticleResponse> {
         public void onCompleted() {
             Timber.d("onCompleted");
         }
