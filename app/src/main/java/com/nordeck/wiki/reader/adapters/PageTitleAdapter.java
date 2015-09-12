@@ -2,10 +2,12 @@ package com.nordeck.wiki.reader.adapters;
 
 import android.content.Context;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.SearchView;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import com.jakewharton.rxbinding.widget.RxSearchView;
 import com.nordeck.wiki.reader.R;
 import com.nordeck.wiki.reader.adapters.base.NdBaseRecyclerAdapter;
 import com.nordeck.wiki.reader.model.IPage;

@@ -17,9 +17,22 @@ public class ArticleResponse implements Parcelable {
     @Expose
     @SerializedName("sections")
     private List<Section> sections;
+    private String id;
 
     protected ArticleResponse(Parcel in) {
         sections = in.createTypedArrayList(Section.CREATOR);
+        id = in.readString();
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeTypedList(sections);
+        dest.writeString(id);
+    }
+
+    @Override
+    public int describeContents() {
+        return 0;
     }
 
     public static final Creator<ArticleResponse> CREATOR = new Creator<ArticleResponse>() {
@@ -34,9 +47,18 @@ public class ArticleResponse implements Parcelable {
         }
     };
 
+    public String getId() {
+        return id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
+    }
+
     public List<Section> getSections() {
         return sections;
     }
+
 
     @Override
     public boolean equals(Object o) {
@@ -45,22 +67,15 @@ public class ArticleResponse implements Parcelable {
 
         ArticleResponse that = (ArticleResponse) o;
 
-        return !(sections != null ? !sections.equals(that.sections) : that.sections != null);
+        if (sections != null ? !sections.equals(that.sections) : that.sections != null) return false;
+        return !(id != null ? !id.equals(that.id) : that.id != null);
 
     }
 
     @Override
     public int hashCode() {
-        return sections != null ? sections.hashCode() : 0;
-    }
-
-    @Override
-    public int describeContents() {
-        return 0;
-    }
-
-    @Override
-    public void writeToParcel(Parcel dest, int flags) {
-        dest.writeTypedList(sections);
+        int result = sections != null ? sections.hashCode() : 0;
+        result = 31 * result + (id != null ? id.hashCode() : 0);
+        return result;
     }
 }

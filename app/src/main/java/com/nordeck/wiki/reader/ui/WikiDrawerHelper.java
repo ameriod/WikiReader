@@ -12,13 +12,18 @@ import android.view.MenuItem;
 import android.view.View;
 
 import com.nordeck.wiki.reader.R;
+import com.nordeck.wiki.reader.SelectedWiki;
 import com.nordeck.wiki.reader.adapters.WikiNavAdapter;
 import com.nordeck.wiki.reader.adapters.base.NdDividerItemDecoration;
 import com.nordeck.wiki.reader.adapters.base.RecyclerItemClickSupport;
+import com.nordeck.wiki.reader.api.ArticleService;
+import com.nordeck.wiki.reader.model.ArticleResponse;
 
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.List;
+
+import rx.Subscriber;
+import timber.log.Timber;
 
 /**
  * Created by parker on 9/7/15.

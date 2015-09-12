@@ -16,7 +16,10 @@ import rx.schedulers.Schedulers;
  */
 abstract class BaseService {
 
+    private String baseUrlPath;
+
     public BaseService(String baseUrlPath) {
+        this.baseUrlPath = baseUrlPath;
         initService(getBuilder(baseUrlPath)
                 .build());
     }
@@ -26,6 +29,10 @@ abstract class BaseService {
         return new RestAdapter.Builder()
                 .setEndpoint(baseUrlPath)
                 .setLogLevel(RestAdapter.LogLevel.FULL);
+    }
+
+    protected String getBaseUrlPath() {
+        return baseUrlPath;
     }
 
     protected abstract void initService(@NonNull RestAdapter restAdapter);

@@ -5,9 +5,11 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.text.TextUtils;
 import android.view.View;
 
 import com.nordeck.wiki.reader.R;
@@ -48,7 +50,12 @@ public class ActivityArticleViewer extends BaseActivity implements IArticleViewe
     private SectionNavAdapter mNavAdapter;
     private LinearLayoutManager mNavLayoutManager;
 
-    private static Intent getLaunchIntent(Context context, @NonNull String articleId) {
+    /**
+     * @param context
+     * @param articleId null == random article
+     * @return
+     */
+    private static Intent getLaunchIntent(Context context, @Nullable String articleId) {
         Intent intent = new Intent(context, ActivityArticleViewer.class);
         intent.putExtra(EXTRA_ARTICLE_ID, articleId);
         return intent;
@@ -57,6 +64,10 @@ public class ActivityArticleViewer extends BaseActivity implements IArticleViewe
     public static void launchActivity(Activity activity, @NonNull String articleId) {
         // TODO create cool transition
         activity.startActivity(getLaunchIntent(activity, articleId));
+    }
+
+    public static void launchActiviyRandom(Activity activity) {
+        activity.startActivity(getLaunchIntent(activity, null));
     }
 
 
@@ -111,7 +122,11 @@ public class ActivityArticleViewer extends BaseActivity implements IArticleViewe
     @Override
     protected void onStart() {
         super.onStart();
-        mPresenter.fetchArticle(mId, false);
+        if (TextUtils.isEmpty(mId)) {
+            mPresenter.fetchRandomArticle(false);
+        } else {
+            mPresenter.fetchArticle(mId, false);
+        }
     }
 
     @Override

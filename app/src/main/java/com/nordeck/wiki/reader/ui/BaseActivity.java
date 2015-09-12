@@ -105,6 +105,10 @@ public abstract class BaseActivity extends AppCompatActivity implements NdView, 
     public void onNavItemSelected(@NonNull String item) {
         if (TextUtils.equals(item, getString(R.string.nav_chose_new_wiki))) {
             ActivityWikis.launchActivity(this);
+        } else if (TextUtils.equals(item, getString(R.string.nav_chose_random))) {
+            ActivityArticleViewer.launchActiviyRandom(this);
+        } else if (TextUtils.equals(item, getString(R.string.nav_chose_top))) {
+            ActivityTopPages.launchActivity(this);
         }
     }
 

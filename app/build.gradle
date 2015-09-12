@@ -34,7 +34,11 @@ dependencies {
     // Rx stuff
     compile 'io.reactivex:rxjava:1.0.14'
     compile 'io.reactivex:rxandroid:1.0.1'
+    // Rx lifecycle
     compile 'com.trello:rxlifecycle:0.2.0'
     compile 'com.trello:rxlifecycle-components:0.2.0'
+    // Rx android components
     compile 'com.jakewharton.rxbinding:rxbinding:0.2.0'
+    compile 'com.jakewharton.rxbinding:rxbinding-appcompat-v7:0.2.0'
+    compile 'com.jakewharton.rxbinding:rxbinding-support-v4:0.2.0'
 }

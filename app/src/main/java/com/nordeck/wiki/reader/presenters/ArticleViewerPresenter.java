@@ -3,6 +3,7 @@ package com.nordeck.wiki.reader.presenters;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.text.TextUtils;
 
 import com.nordeck.wiki.reader.api.ArticleService;
 import com.nordeck.wiki.reader.api.RelatedArticleService;
@@ -21,9 +22,11 @@ public class ArticleViewerPresenter extends NdBasePresenter<IArticleViewerView> 
 
     private ArticleResponse mResponse;
     private RelatedResponse mRelatedResponse;
+    private String mId;
 
     private static final String OUT_STATE_ARTICLE_RESPONSE = "out_state_article_response";
     private static final String OUT_STATE_RELATED_RESPONSE = "out_state_related_response";
+    private static final String OUT_STATE_ARTICLE_ID = "out_state_article_id";
 
 
     private String mBaseUrl;
@@ -38,6 +41,7 @@ public class ArticleViewerPresenter extends NdBasePresenter<IArticleViewerView> 
         if (bundle != null) {
             mResponse = bundle.getParcelable(OUT_STATE_ARTICLE_RESPONSE);
             mRelatedResponse = bundle.getParcelable(OUT_STATE_RELATED_RESPONSE);
+            mId = bundle.getString(OUT_STATE_ARTICLE_ID);
         }
     }
 
@@ -50,22 +54,39 @@ public class ArticleViewerPresenter extends NdBasePresenter<IArticleViewerView> 
         if (mRelatedResponse != null) {
             bundle.putParcelable(OUT_STATE_RELATED_RESPONSE, mRelatedResponse);
         }
+        bundle.putString(OUT_STATE_ARTICLE_ID, mId);
+    }
+
+    public void fetchRandomArticle(boolean forceLoad) {
+        if (TextUtils.isEmpty(mId)) {
+            getView().showProgressIndicator(true);
+            addToSubscriptions(new ArticleService(mBaseUrl)
+                    .getRandomArticle()
+                    .subscribe(new RandomSubscrber()));
+        } else {
+            fetchArticle(mId, forceLoad);
+        }
     }
 
     public void fetchArticle(@NonNull String id, boolean forceLoad) {
+        mId = id;
         if (forceLoad || mResponse == null || mResponse.getSections() == null || mResponse.getSections().size() == 0) {
             getView().showProgressIndicator(true);
             // Do not flat map the responses since the related articles seems to be optional?
             addToSubscriptions(new ArticleService(mBaseUrl)
                     .getArticle(id)
                     .subscribe(new ArticleSubscriber()));
-            addToSubscriptions(new RelatedArticleService(mBaseUrl)
-                    .getRelatedPages(id)
-                    .subscribe(new RelatedSubscriber()));
+            fetchRelatedArticles(id);
         } else {
             getView().onArticleFetched(mResponse);
             getView().onRelatedArticlesFetched(mRelatedResponse);
         }
+    }
+
+    private void fetchRelatedArticles(String id) {
+        addToSubscriptions(new RelatedArticleService(mBaseUrl)
+                .getRelatedPages(id)
+                .subscribe(new RelatedSubscriber()));
     }
 
 
@@ -84,9 +105,7 @@ public class ArticleViewerPresenter extends NdBasePresenter<IArticleViewerView> 
         @Override
         public void onNext(ArticleResponse articleResponse) {
             Timber.d("onNext");
-            mResponse = articleResponse;
-            getView().showProgressIndicator(false);
-            getView().onArticleFetched(articleResponse);
+            handleResponse(articleResponse);
         }
     }
 
@@ -108,4 +127,33 @@ public class ArticleViewerPresenter extends NdBasePresenter<IArticleViewerView> 
             getView().onRelatedArticlesFetched(relatedRelatedResponse);
         }
     }
+
+    private class RandomSubscrber extends Subscriber<ArticleResponse> {
+        public void onCompleted() {
+            Timber.d("onCompleted");
+        }
+
+        @Override
+        public void onError(Throwable e) {
+            Timber.d(e, "onError");
+            getView().displayError("Error Fetching Article");
+        }
+
+        @Override
+        public void onNext(ArticleResponse articleResponse) {
+            Timber.d("onNext");
+            mId = articleResponse.getId();
+            handleResponse(articleResponse);
+            // Now get the related articles
+            fetchRelatedArticles(mId);
+
+        }
+    }
+
+    private void handleResponse(ArticleResponse articleResponse) {
+        mResponse = articleResponse;
+        getView().showProgressIndicator(false);
+        getView().onArticleFetched(articleResponse);
+    }
+
 }
