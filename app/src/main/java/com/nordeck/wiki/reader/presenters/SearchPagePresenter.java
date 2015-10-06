@@ -7,15 +7,16 @@ import android.support.annotation.Nullable;
 import com.nordeck.wiki.reader.api.SearchArticlesService;
 import com.nordeck.wiki.reader.model.SearchResponse;
 import com.nordeck.wiki.reader.ui.ISearchPagesView;
-import com.nordeck.wiki.reader.ui.ActivityTopPages;
 
+import in.nordeck.lib.base.presenter.BasePresenter;
 import rx.Subscriber;
 import timber.log.Timber;
 
 /**
+ * TODO make interface
  * Created by parker on 9/6/15.
  */
-public class SearchPagePresenter extends NdBasePresenter<ISearchPagesView> {
+public class SearchPagePresenter extends BasePresenter<ISearchPagesView> {
 
     private String mSearchQuery;
     private SearchResponse mResponse;

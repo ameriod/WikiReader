@@ -5,7 +5,6 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.widget.DrawerLayout;
-import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
@@ -15,13 +14,17 @@ import android.widget.Toast;
 
 import com.nordeck.wiki.reader.R;
 import com.nordeck.wiki.reader.Utils;
-import com.nordeck.wiki.reader.presenters.NdView;
+
+import in.nordeck.lib.base.presenter.BasePresenterActivity;
+import in.nordeck.lib.base.presenter.IPresenter;
+import in.nordeck.lib.base.presenter.IView;
 
 /**
  * Created by parker on 9/4/15.
  */
-public abstract class BaseActivity extends AppCompatActivity implements NdView, WikiDrawerHelper
-        .OnNavItemSelectedListener {
+public abstract class BaseActivity<V extends IView, P extends IPresenter<V>>
+        extends BasePresenterActivity<V, P> implements
+        WikiDrawerHelper.OnNavItemSelectedListener {
 
     private Toolbar mToolbar;
     protected View mLoading;
@@ -121,4 +124,5 @@ public abstract class BaseActivity extends AppCompatActivity implements NdView, 
     public void displayError(@Nullable String error) {
         showToastMessage(error);
     }
+
 }

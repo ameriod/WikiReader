@@ -27,17 +27,17 @@ import com.nordeck.wiki.reader.presenters.WikiPresenter;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
-import de.greenrobot.event.EventBus;
+import in.nordeck.lib.base.presenter.IPresenterFactory;
 
 /**
  * Created by parker on 9/6/15.
  */
-public class ActivityWikis extends BaseActivity implements IWikiView, IWikiDetailView, RecyclerItemClickSupport
-        .OnItemClickListener, SearchView.OnQueryTextListener, DialogFragmentWikiDetail.OnWikiSelectedListener {
+public class ActivityWikis extends BaseActivity<IWikiView, WikiPresenter> implements IWikiView, IWikiDetailView,
+        RecyclerItemClickSupport.OnItemClickListener, SearchView.OnQueryTextListener, DialogFragmentWikiDetail
+                .OnWikiSelectedListener {
 
     private static final int MIN_SEARCH_LENGTH = 3;
 
-    private WikiPresenter mPresenter;
     private WikiDetailPresenter mDetailPresenter;
 
     private boolean mIsSelectable;
@@ -51,6 +51,22 @@ public class ActivityWikis extends BaseActivity implements IWikiView, IWikiDetai
         activity.startActivity(getLaunchIntent(activity));
     }
 
+    @Override
+    protected IPresenterFactory<WikiPresenter> getPresenterFactory() {
+        return new IPresenterFactory<WikiPresenter>() {
+            @NonNull
+            @Override
+            public WikiPresenter createPresenter() {
+                return new WikiPresenter();
+            }
+        };
+    }
+
+    @Override
+    protected String getPresenterTag() {
+        return null;
+    }
+
     @Bind(R.id.recycler_view)
     RecyclerView mRecyclerView;
 
@@ -58,7 +74,7 @@ public class ActivityWikis extends BaseActivity implements IWikiView, IWikiDetai
     private SearchView mSearchView;
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
+    public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_select_wiki);
         ButterKnife.bind(this);
@@ -72,15 +88,12 @@ public class ActivityWikis extends BaseActivity implements IWikiView, IWikiDetai
         mAdapter = new WikiTitleAdapter(this);
         mRecyclerView.setAdapter(mAdapter);
 
-        mPresenter = new WikiPresenter();
-        mPresenter.bindView(this);
-        mPresenter.onCreate(savedInstanceState);
         mDetailPresenter = new WikiDetailPresenter();
         mDetailPresenter.bindView(this);
         mDetailPresenter.onCreate(savedInstanceState);
 
-        if (!TextUtils.isEmpty(mPresenter.getSearchQuery())) {
-            mSearchView.setQuery(mPresenter.getSearchQuery(), false);
+        if (!TextUtils.isEmpty(getPresenter().getSearchQuery())) {
+            mSearchView.setQuery(getPresenter().getSearchQuery(), false);
         }
         mIsSelectable = true;
     }
@@ -90,9 +103,9 @@ public class ActivityWikis extends BaseActivity implements IWikiView, IWikiDetai
         menuInflater.inflate(R.menu.menu_search_wiki, menu);
         mSearchView = (SearchView) menu.findItem(R.id.action_search).getActionView();
         mSearchView.setQueryHint(getString(R.string.action_search_wikis));
-        if (!TextUtils.isEmpty(mPresenter.getSearchQuery())) {
-            mSearchView.setQuery(mPresenter.getSearchQuery(), false);
-            onSearchWikisFetched(mPresenter.getSearchResponse());
+        if (!TextUtils.isEmpty(getPresenter().getSearchQuery())) {
+            mSearchView.setQuery(getPresenter().getSearchQuery(), false);
+            onSearchWikisFetched(getPresenter().getSearchResponse());
         }
         mSearchView.setOnQueryTextListener(this);
         return true;
@@ -101,23 +114,20 @@ public class ActivityWikis extends BaseActivity implements IWikiView, IWikiDetai
     @Override
     protected void onStart() {
         super.onStart();
-        if (TextUtils.isEmpty(mPresenter.getSearchQuery())) {
-            mPresenter.fetchTopWikis(false);
+        if (TextUtils.isEmpty(getPresenter().getSearchQuery())) {
+            getPresenter().fetchTopWikis(false);
         }
     }
 
     @Override
-    protected void onSaveInstanceState(Bundle outState) {
+    public void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
-        mPresenter.onSaveInstanceState(outState);
         mDetailPresenter.onSaveInstanceState(outState);
     }
 
     @Override
-    protected void onDestroy() {
+    public void onDestroy() {
         super.onDestroy();
-        mPresenter.onDestroy();
-        mPresenter.unbindView();
         mDetailPresenter.onDestroy();
         mDetailPresenter.unbindView();
         ButterKnife.unbind(this);
@@ -181,12 +191,12 @@ public class ActivityWikis extends BaseActivity implements IWikiView, IWikiDetai
     @Override
     public boolean onQueryTextChange(String newText) {
         if (!TextUtils.isEmpty(newText.trim()) && newText.length() >= MIN_SEARCH_LENGTH) {
-            mPresenter.preformWikiSearch(newText.trim());
+            getPresenter().preformWikiSearch(newText.trim());
             return true;
         } else {
-            if (mPresenter.getTopResponse() != null && !TextUtils.isEmpty(mPresenter.getSearchQuery())) {
-                mPresenter.setSearchQuery(null);
-                mAdapter.addAll(mPresenter.getTopResponse().getItems(), true);
+            if (getPresenter().getTopResponse() != null && !TextUtils.isEmpty(getPresenter().getSearchQuery())) {
+                getPresenter().setSearchQuery(null);
+                mAdapter.addAll(getPresenter().getTopResponse().getItems(), true);
             }
         }
         return false;

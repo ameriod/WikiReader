@@ -6,7 +6,6 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.support.v4.widget.DrawerLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
@@ -29,21 +28,24 @@ import java.util.List;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
+import in.nordeck.lib.base.presenter.IPresenter;
+import in.nordeck.lib.base.presenter.IPresenterFactory;
 
 /**
  * TODO save the recycler view positions and restore their states?
  * <p/>
  * Created by parker on 9/4/15.
  */
-public class ActivityArticleViewer extends BaseActivity implements IArticleViewerView, RecyclerItemClickSupport
-        .OnItemClickListener, ContentViewerAdapter.OnClickRelatedArticleListener {
+public class ActivityArticleViewer extends BaseActivity<IArticleViewerView, ArticleViewerPresenter> implements
+        IArticleViewerView, RecyclerItemClickSupport.OnItemClickListener, ContentViewerAdapter
+        .OnClickRelatedArticleListener {
+    private static final String TAG = "ActivityArticleViewer";
 
     private static final String EXTRA_ARTICLE_ID = "extra_article_id";
 
     @Bind(R.id.recycler_view)
     RecyclerView mRecyclerView;
 
-    private ArticleViewerPresenter mPresenter;
     private String mId;
     private ContentViewerAdapter mContentAdapter;
     private LinearLayoutManager mContentLayoutManager;
@@ -72,7 +74,23 @@ public class ActivityArticleViewer extends BaseActivity implements IArticleViewe
 
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
+    protected IPresenterFactory getPresenterFactory() {
+        return new IPresenterFactory() {
+            @NonNull
+            @Override
+            public IPresenter createPresenter() {
+                return new ArticleViewerPresenter(SelectedWiki.getInstance().getSelectedWiki().getUrl());
+            }
+        };
+    }
+
+    @Override
+    protected String getPresenterTag() {
+        return TAG + "_" + mId;
+    }
+
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_content_view);
         ButterKnife.bind(this);
@@ -112,9 +130,6 @@ public class ActivityArticleViewer extends BaseActivity implements IArticleViewe
                 }
             }
         });
-        mPresenter = new ArticleViewerPresenter((SelectedWiki.getInstance().getSelectedWiki().getUrl()));
-        mPresenter.bindView(this);
-        mPresenter.onCreate(savedInstanceState);
 
         getSupportActionBar().setTitle(SelectedWiki.getInstance().getSelectedWiki().getTitle());
     }
@@ -123,23 +138,15 @@ public class ActivityArticleViewer extends BaseActivity implements IArticleViewe
     protected void onStart() {
         super.onStart();
         if (TextUtils.isEmpty(mId)) {
-            mPresenter.fetchRandomArticle(false);
+            getPresenter().fetchRandomArticle(false);
         } else {
-            mPresenter.fetchArticle(mId, false);
+            getPresenter().fetchArticle(mId, false);
         }
     }
 
     @Override
-    protected void onSaveInstanceState(Bundle outState) {
-        super.onSaveInstanceState(outState);
-        mPresenter.onSaveInstanceState(outState);
-    }
-
-    @Override
-    protected void onDestroy() {
+    public void onDestroy() {
         super.onDestroy();
-        mPresenter.onDestroy();
-        mPresenter.unbindView();
         ButterKnife.unbind(this);
     }
 

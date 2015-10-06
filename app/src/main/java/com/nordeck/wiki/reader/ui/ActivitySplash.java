@@ -6,6 +6,7 @@ import android.support.v7.app.AppCompatActivity;
 import com.nordeck.wiki.reader.SelectedWiki;
 
 /**
+ * TODO add a splash screen image?
  * Created by parker on 9/7/15.
  */
 public class ActivitySplash extends AppCompatActivity {

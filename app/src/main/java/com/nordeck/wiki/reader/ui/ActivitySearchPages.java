@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -26,14 +27,16 @@ import java.util.ArrayList;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
+import in.nordeck.lib.base.presenter.IPresenterFactory;
 
 /**
  * TODO remove transition
  * <p/>
  * Created by parker on 9/6/15.
  */
-public class ActivitySearchPages extends BaseActivity implements ISearchPagesView, RecyclerItemClickSupport
-        .OnItemClickListener, SearchView.OnQueryTextListener {
+public class ActivitySearchPages extends BaseActivity<ISearchPagesView, SearchPagePresenter> implements
+        ISearchPagesView, RecyclerItemClickSupport.OnItemClickListener, SearchView.OnQueryTextListener {
+    private static final String TAG = "ActivitySearchPages";
 
     private static final int MIN_SEARCH_LENGTH = 3;
 
@@ -46,16 +49,30 @@ public class ActivitySearchPages extends BaseActivity implements ISearchPagesVie
         activity.startActivity(getLaunchIntent(activity));
     }
 
+    @Override
+    protected IPresenterFactory<SearchPagePresenter> getPresenterFactory() {
+        return new IPresenterFactory<SearchPagePresenter>() {
+            @NonNull
+            @Override
+            public SearchPagePresenter createPresenter() {
+                return new SearchPagePresenter(SelectedWiki.getInstance().getSelectedWiki().getUrl());
+            }
+        };
+    }
+
+    @Override
+    protected String getPresenterTag() {
+        return TAG;
+    }
+
     @Bind(R.id.recycler_view)
     RecyclerView mRecyclerView;
     private SearchView mSearchView;
 
-    private SearchPagePresenter mPresenter;
-
     private PageTitleAdapter mAdapter;
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
+    public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         ButterKnife.bind(this);
@@ -69,13 +86,11 @@ public class ActivitySearchPages extends BaseActivity implements ISearchPagesVie
         mAdapter = new PageTitleAdapter(this);
         mRecyclerView.setAdapter(mAdapter);
 
-        mPresenter = new SearchPagePresenter(SelectedWiki.getInstance().getSelectedWiki().getUrl());
-        mPresenter.bindView(this);
-        mPresenter.onCreate(savedInstanceState);
 
-        if (mPresenter.getResponse() != null) {
-            onResultsFetched(mPresenter.getResponse());
+        if (getPresenter().getResponse() != null) {
+            onResultsFetched(getPresenter().getResponse());
         }
+
     }
 
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -85,24 +100,16 @@ public class ActivitySearchPages extends BaseActivity implements ISearchPagesVie
         mSearchView.setQueryHint(getString(R.string.action_search_pages_hint, SelectedWiki.getInstance()
                 .getSelectedWiki().getTitle()));
         mSearchView.onActionViewExpanded();
-        if (!TextUtils.isEmpty(mPresenter.getSearchQuery())) {
-            mSearchView.setQuery(mPresenter.getSearchQuery(), false);
+        if (!TextUtils.isEmpty(getPresenter().getSearchQuery())) {
+            mSearchView.setQuery(getPresenter().getSearchQuery(), false);
         }
         mSearchView.setOnQueryTextListener(this);
         return true;
     }
 
     @Override
-    protected void onSaveInstanceState(Bundle outState) {
-        super.onSaveInstanceState(outState);
-        mPresenter.onSaveInstanceState(outState);
-    }
-
-    @Override
-    protected void onDestroy() {
+    public void onDestroy() {
         super.onDestroy();
-        mPresenter.onDestroy();
-        mPresenter.unbindView();
         ButterKnife.unbind(this);
     }
 
@@ -133,7 +140,7 @@ public class ActivitySearchPages extends BaseActivity implements ISearchPagesVie
     @Override
     public boolean onQueryTextChange(String newText) {
         if (!TextUtils.isEmpty(newText.trim()) && newText.length() >= MIN_SEARCH_LENGTH) {
-            mPresenter.fetchSearchResults(newText.trim());
+            getPresenter().fetchSearchResults(newText.trim());
             return true;
         } else {
             mAdapter.clear(true);

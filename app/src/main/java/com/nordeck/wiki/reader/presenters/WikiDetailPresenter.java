@@ -8,13 +8,15 @@ import com.nordeck.wiki.reader.api.WikiDetailService;
 import com.nordeck.wiki.reader.model.WikiDetail;
 import com.nordeck.wiki.reader.ui.IWikiDetailView;
 
+import in.nordeck.lib.base.presenter.BasePresenter;
 import rx.Subscriber;
 import timber.log.Timber;
 
 /**
+ * TODO make interface
  * Created by parker on 9/7/15.
  */
-public class WikiDetailPresenter extends NdBasePresenter<IWikiDetailView> {
+public class WikiDetailPresenter extends BasePresenter<IWikiDetailView> {
 
     private WikiDetail mDetail;
     private static final String OUT_STATE_WIKI_DETAIL = "out_state_wiki_detail";

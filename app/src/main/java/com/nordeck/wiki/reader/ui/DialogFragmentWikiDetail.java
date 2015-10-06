@@ -1,6 +1,5 @@
 package com.nordeck.wiki.reader.ui;
 
-import android.app.Activity;
 import android.app.Dialog;
 import android.app.DialogFragment;
 import android.content.DialogInterface;
@@ -14,8 +13,6 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.nordeck.wiki.reader.R;
-import com.nordeck.wiki.reader.SelectedWiki;
-import com.nordeck.wiki.reader.model.Wiki;
 import com.nordeck.wiki.reader.model.WikiDetail;
 import com.squareup.picasso.Picasso;
 

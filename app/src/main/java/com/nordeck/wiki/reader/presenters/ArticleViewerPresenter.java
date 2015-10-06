@@ -11,13 +11,15 @@ import com.nordeck.wiki.reader.model.ArticleResponse;
 import com.nordeck.wiki.reader.model.RelatedResponse;
 import com.nordeck.wiki.reader.ui.IArticleViewerView;
 
+import in.nordeck.lib.base.presenter.BasePresenter;
 import rx.Subscriber;
 import timber.log.Timber;
 
 /**
+ * TODO make interface
  * Created by parker on 9/4/15.
  */
-public class ArticleViewerPresenter extends NdBasePresenter<IArticleViewerView> {
+public class ArticleViewerPresenter extends BasePresenter<IArticleViewerView> {
 
     private ArticleResponse mResponse;
     private RelatedResponse mRelatedResponse;

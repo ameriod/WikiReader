@@ -7,15 +7,16 @@ import android.support.annotation.Nullable;
 import com.nordeck.wiki.reader.api.TopArticlesService;
 import com.nordeck.wiki.reader.model.PagesResponse;
 import com.nordeck.wiki.reader.ui.ITopArticlesView;
-import com.nordeck.wiki.reader.ui.ActivityTopPages;
 
+import in.nordeck.lib.base.presenter.BasePresenter;
 import rx.Subscriber;
 import timber.log.Timber;
 
 /**
+ * TODO make interface
  * Created by parker on 9/4/15.
  */
-public class TopArticlesPresenter extends NdBasePresenter<ITopArticlesView> {
+public class TopArticlesPresenter extends BasePresenter<ITopArticlesView> {
 
     private PagesResponse mResponse;
 

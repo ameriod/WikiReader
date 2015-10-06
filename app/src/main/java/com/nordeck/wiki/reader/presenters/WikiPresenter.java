@@ -8,13 +8,15 @@ import com.nordeck.wiki.reader.api.WikisService;
 import com.nordeck.wiki.reader.model.WikiResponse;
 import com.nordeck.wiki.reader.ui.IWikiView;
 
+import in.nordeck.lib.base.presenter.BasePresenter;
 import rx.Subscriber;
 import timber.log.Timber;
 
 /**
+ * TODO make interface
  * Created by parker on 9/6/15.
  */
-public class WikiPresenter extends NdBasePresenter<IWikiView> {
+public class WikiPresenter extends BasePresenter<IWikiView> {
 
     private String mSearchQuery;
     private WikiResponse mSearchResponse;

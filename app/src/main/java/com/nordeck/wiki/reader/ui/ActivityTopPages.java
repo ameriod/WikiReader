@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.Menu;
@@ -24,9 +25,11 @@ import java.util.ArrayList;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
+import in.nordeck.lib.base.presenter.IPresenterFactory;
 
-public class ActivityTopPages extends BaseActivity implements ITopArticlesView, RecyclerItemClickSupport
-        .OnItemClickListener {
+public class ActivityTopPages extends BaseActivity<ITopArticlesView, TopArticlesPresenter> implements ITopArticlesView,
+        RecyclerItemClickSupport.OnItemClickListener {
+    private static final String TAG = "ActivityTopPages";
 
     public static Intent getLaunchIntent(Context context) {
         Intent intent = new Intent(context, ActivityTopPages.class);
@@ -41,10 +44,24 @@ public class ActivityTopPages extends BaseActivity implements ITopArticlesView, 
     RecyclerView mRecyclerView;
     private PageDetailAdapter mAdapter;
 
-    private TopArticlesPresenter mPresenter;
+    @Override
+    protected IPresenterFactory<TopArticlesPresenter> getPresenterFactory() {
+        return new IPresenterFactory<TopArticlesPresenter>() {
+            @NonNull
+            @Override
+            public TopArticlesPresenter createPresenter() {
+                return new TopArticlesPresenter(SelectedWiki.getInstance().getSelectedWiki().getUrl());
+            }
+        };
+    }
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
+    protected String getPresenterTag() {
+        return TAG + "_" + SelectedWiki.getInstance().getSelectedWiki().getUrl();
+    }
+
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         ButterKnife.bind(this);
@@ -58,10 +75,6 @@ public class ActivityTopPages extends BaseActivity implements ITopArticlesView, 
         RecyclerItemClickSupport.addTo(mRecyclerView).setOnItemClickListener(this);
         mAdapter = new PageDetailAdapter(this);
         mRecyclerView.setAdapter(mAdapter);
-
-        mPresenter = new TopArticlesPresenter((SelectedWiki.getInstance().getSelectedWiki().getUrl()));
-        mPresenter.bindView(this);
-        mPresenter.onCreate(savedInstanceState);
 
         getSupportActionBar().setTitle(getString(R.string.title_top, SelectedWiki.getInstance().getSelectedWiki()
                 .getTitle()));
@@ -96,20 +109,12 @@ public class ActivityTopPages extends BaseActivity implements ITopArticlesView, 
     @Override
     protected void onStart() {
         super.onStart();
-        mPresenter.fetchTopArticles(false);
+        getPresenter().fetchTopArticles(false);
     }
 
     @Override
-    protected void onSaveInstanceState(Bundle outState) {
-        super.onSaveInstanceState(outState);
-        mPresenter.onSaveInstanceState(outState);
-    }
-
-    @Override
-    protected void onDestroy() {
+    public void onDestroy() {
         super.onDestroy();
-        mPresenter.onDestroy();
-        mPresenter.unbindView();
         ButterKnife.unbind(this);
     }
 
