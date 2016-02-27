@@ -12,23 +12,16 @@ import android.view.MenuItem;
 import android.view.View;
 
 import com.nordeck.wiki.reader.R;
-import com.nordeck.wiki.reader.SelectedWiki;
 import com.nordeck.wiki.reader.adapters.WikiNavAdapter;
 import com.nordeck.wiki.reader.adapters.base.NdDividerItemDecoration;
-import com.nordeck.wiki.reader.adapters.base.RecyclerItemClickSupport;
-import com.nordeck.wiki.reader.api.ArticleService;
-import com.nordeck.wiki.reader.model.ArticleResponse;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 
-import rx.Subscriber;
-import timber.log.Timber;
-
 /**
  * Created by parker on 9/7/15.
  */
-public class WikiDrawerHelper implements RecyclerItemClickSupport.OnItemClickListener {
+public class WikiDrawerHelper implements WikiNavAdapter.OnItemClickListener<String> {
 
     public interface OnNavItemSelectedListener {
         void onNavItemSelected(@NonNull String item);
@@ -56,10 +49,8 @@ public class WikiDrawerHelper implements RecyclerItemClickSupport.OnItemClickLis
             LinearLayoutManager linearLayoutManager = new LinearLayoutManager(activity.getApplicationContext());
             linearLayoutManager.setOrientation(LinearLayoutManager.VERTICAL);
             mLeftDrawer.setLayoutManager(linearLayoutManager);
-            mLeftDrawer.addItemDecoration(new NdDividerItemDecoration(activity, NdDividerItemDecoration
-                    .VERTICAL_LIST));
-            RecyclerItemClickSupport.addTo(mLeftDrawer).setOnItemClickListener(this);
-            mNavAdapter = new WikiNavAdapter(activity);
+            mLeftDrawer.addItemDecoration(new NdDividerItemDecoration(activity, NdDividerItemDecoration.VERTICAL_LIST));
+            mNavAdapter = new WikiNavAdapter(activity, this);
             mLeftDrawer.setAdapter(mNavAdapter);
             ArrayList<String> navItems = new ArrayList<>(Arrays.asList(activity.getApplication().getResources()
                     .getStringArray(R.array.wiki_nav_list)));
@@ -101,7 +92,7 @@ public class WikiDrawerHelper implements RecyclerItemClickSupport.OnItemClickLis
                     }
                 }
             };
-            mDrawerLayout.setDrawerListener(mToggle);
+            mDrawerLayout.addDrawerListener(mToggle);
 
             mActivity.getSupportActionBar().setDisplayHomeAsUpEnabled(true);
             mActivity.getSupportActionBar().setHomeButtonEnabled(true);
@@ -135,11 +126,9 @@ public class WikiDrawerHelper implements RecyclerItemClickSupport.OnItemClickLis
     }
 
     @Override
-    public boolean onItemClick(RecyclerView parent, View view, int position, long id) {
+    public void onItemClicked(@NonNull String item) {
         if (mListener != null) {
-            mListener.onNavItemSelected(mNavAdapter.getItem(position));
-            return true;
+            mListener.onNavItemSelected(item);
         }
-        return false;
     }
 }

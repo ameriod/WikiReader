@@ -4,18 +4,17 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
-import android.view.View;
 
 import com.nordeck.wiki.reader.R;
 import com.nordeck.wiki.reader.SelectedWiki;
 import com.nordeck.wiki.reader.adapters.PageDetailAdapter;
 import com.nordeck.wiki.reader.adapters.base.NdDividerItemDecoration;
-import com.nordeck.wiki.reader.adapters.base.RecyclerItemClickSupport;
 import com.nordeck.wiki.reader.model.IPage;
 import com.nordeck.wiki.reader.model.PagesResponse;
 import com.nordeck.wiki.reader.presenters.TopArticlesPresenter;
@@ -25,12 +24,11 @@ import java.util.ArrayList;
 import butterknife.Bind;
 import butterknife.ButterKnife;
 
-public class ActivityTopPages extends BaseActivity implements ITopArticlesView, RecyclerItemClickSupport
-        .OnItemClickListener {
+public class ActivityTopPages extends BaseActivity implements ITopArticlesView,
+        PageDetailAdapter.OnItemClickListener<IPage> {
 
     public static Intent getLaunchIntent(Context context) {
-        Intent intent = new Intent(context, ActivityTopPages.class);
-        return intent;
+        return new Intent(context, ActivityTopPages.class);
     }
 
     public static void launchActivity(Activity activity) {
@@ -55,8 +53,7 @@ public class ActivityTopPages extends BaseActivity implements ITopArticlesView, 
         linearLayoutManager.setOrientation(LinearLayoutManager.VERTICAL);
         mRecyclerView.setLayoutManager(linearLayoutManager);
         mRecyclerView.addItemDecoration(new NdDividerItemDecoration(this, NdDividerItemDecoration.VERTICAL_LIST));
-        RecyclerItemClickSupport.addTo(mRecyclerView).setOnItemClickListener(this);
-        mAdapter = new PageDetailAdapter(this);
+        mAdapter = new PageDetailAdapter(this, this);
         mRecyclerView.setAdapter(mAdapter);
 
         mPresenter = new TopArticlesPresenter((SelectedWiki.getInstance().getSelectedWiki().getUrl()));
@@ -114,15 +111,12 @@ public class ActivityTopPages extends BaseActivity implements ITopArticlesView, 
     }
 
     @Override
-    public void onTopArticlesFetched(PagesResponse response) {
+    public void onTopArticlesFetched(@NonNull PagesResponse response) {
         mAdapter.addAll(new ArrayList<IPage>(response.getItems()), true);
     }
 
     @Override
-    public boolean onItemClick(RecyclerView parent, View view, int position, long id) {
-        IPage article = mAdapter.getItem(position);
-        ActivityArticleViewer.launchActivity(this, article.getId());
-        return true;
+    public void onItemClicked(@NonNull IPage item) {
+        ActivityArticleViewer.launchActivity(this, item.getId());
     }
-
 }

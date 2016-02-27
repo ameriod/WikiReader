@@ -52,7 +52,7 @@ public class ContentViewerAdapter extends NdBaseRecyclerAdapter<ISection, Recycl
     private SparseArray<Spanned> mSpanCache;
 
     public ContentViewerAdapter(Context context, OnClickRelatedArticleListener listener) {
-        super(context);
+        super(context, null);
         mArticleListener = listener;
     }
 

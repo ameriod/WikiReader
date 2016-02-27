@@ -1,6 +1,8 @@
 package com.nordeck.wiki.reader.adapters;
 
 import android.content.Context;
+import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.view.ViewGroup;
@@ -13,9 +15,11 @@ import com.nordeck.wiki.reader.model.Wiki;
 /**
  * Created by parker on 9/4/15.
  */
-public class WikiTitleAdapter extends NdBaseRecyclerAdapter<Wiki, WikiTitleAdapter.ItemViewHolder> {
-    public WikiTitleAdapter(Context context) {
-        super(context);
+public class WikiTitleAdapter extends NdBaseRecyclerAdapter<Wiki, WikiTitleAdapter.ItemViewHolder>
+        implements View.OnClickListener {
+
+    public WikiTitleAdapter(@NonNull Context context, @Nullable OnItemClickListener<Wiki> listener) {
+        super(context, listener);
     }
 
     @Override
@@ -26,7 +30,10 @@ public class WikiTitleAdapter extends NdBaseRecyclerAdapter<Wiki, WikiTitleAdapt
 
     @Override
     public void onBindViewHolder(ItemViewHolder holder, int position) {
-        holder.tvName.setText(getItem(position).getName());
+        Wiki wiki = getItem(position);
+        holder.itemView.setOnClickListener(this);
+        holder.itemView.setTag(wiki);
+        holder.tvName.setText(wiki.getName());
     }
 
     class ItemViewHolder extends RecyclerView.ViewHolder {

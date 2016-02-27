@@ -12,13 +12,11 @@ import android.support.v7.widget.SearchView;
 import android.text.TextUtils;
 import android.view.Menu;
 import android.view.MenuInflater;
-import android.view.View;
 
 import com.nordeck.wiki.reader.R;
 import com.nordeck.wiki.reader.SelectedWiki;
 import com.nordeck.wiki.reader.adapters.WikiTitleAdapter;
 import com.nordeck.wiki.reader.adapters.base.NdDividerItemDecoration;
-import com.nordeck.wiki.reader.adapters.base.RecyclerItemClickSupport;
 import com.nordeck.wiki.reader.model.Wiki;
 import com.nordeck.wiki.reader.model.WikiDetail;
 import com.nordeck.wiki.reader.model.WikiResponse;
@@ -27,13 +25,13 @@ import com.nordeck.wiki.reader.presenters.WikiPresenter;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
-import de.greenrobot.event.EventBus;
 
 /**
  * Created by parker on 9/6/15.
  */
-public class ActivityWikis extends BaseActivity implements IWikiView, IWikiDetailView, RecyclerItemClickSupport
-        .OnItemClickListener, SearchView.OnQueryTextListener, DialogFragmentWikiDetail.OnWikiSelectedListener {
+public class ActivityWikis extends BaseActivity implements IWikiView, IWikiDetailView,
+        WikiTitleAdapter.OnItemClickListener<Wiki>, SearchView.OnQueryTextListener,
+        DialogFragmentWikiDetail.OnWikiSelectedListener {
 
     private static final int MIN_SEARCH_LENGTH = 3;
 
@@ -43,8 +41,7 @@ public class ActivityWikis extends BaseActivity implements IWikiView, IWikiDetai
     private boolean mIsSelectable;
 
     public static Intent getLaunchIntent(Context context) {
-        Intent intent = new Intent(context, ActivityWikis.class);
-        return intent;
+        return new Intent(context, ActivityWikis.class);
     }
 
     public static void launchActivity(Activity activity) {
@@ -68,8 +65,7 @@ public class ActivityWikis extends BaseActivity implements IWikiView, IWikiDetai
         linearLayoutManager.setOrientation(LinearLayoutManager.VERTICAL);
         mRecyclerView.setLayoutManager(linearLayoutManager);
         mRecyclerView.addItemDecoration(new NdDividerItemDecoration(this, NdDividerItemDecoration.VERTICAL_LIST));
-        RecyclerItemClickSupport.addTo(mRecyclerView).setOnItemClickListener(this);
-        mAdapter = new WikiTitleAdapter(this);
+        mAdapter = new WikiTitleAdapter(this, this);
         mRecyclerView.setAdapter(mAdapter);
 
         mPresenter = new WikiPresenter();
@@ -163,14 +159,11 @@ public class ActivityWikis extends BaseActivity implements IWikiView, IWikiDetai
     }
 
     @Override
-    public boolean onItemClick(RecyclerView parent, View view, int position, long id) {
+    public void onItemClicked(@NonNull Wiki wiki) {
         if (mIsSelectable) {
-            Wiki wiki = mAdapter.getItem(position);
             mIsSelectable = false;
             mDetailPresenter.fetchWikibyId(wiki.getId());
-            return true;
         }
-        return false;
     }
 
     @Override

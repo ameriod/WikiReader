@@ -1,6 +1,8 @@
 package com.nordeck.wiki.reader.adapters;
 
 import android.content.Context;
+import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
 import android.view.View;
@@ -18,9 +20,11 @@ import com.squareup.picasso.Picasso;
 /**
  * Created by parker on 9/7/15.
  */
-public class WikiNavAdapter extends NdBaseRecyclerAdapter<String, RecyclerView.ViewHolder> {
-    public WikiNavAdapter(Context context) {
-        super(context);
+public class WikiNavAdapter extends NdBaseRecyclerAdapter<String, RecyclerView.ViewHolder> implements
+        View.OnClickListener {
+
+    public WikiNavAdapter(@NonNull Context context, @Nullable OnItemClickListener<String> listener) {
+        super(context, listener);
     }
 
     private static final int TYPE_HEADER = 1;
@@ -55,7 +59,10 @@ public class WikiNavAdapter extends NdBaseRecyclerAdapter<String, RecyclerView.V
                 Utils.setViewVisibility(headerHolder.ivLogo, false);
             }
         } else {
-            ((ItemViewHolder) holder).tvName.setText(getItem(position));
+            String item = getItem(position);
+            holder.itemView.setOnClickListener(this);
+            holder.itemView.setTag(item);
+            ((ItemViewHolder) holder).tvName.setText(item);
         }
     }
 

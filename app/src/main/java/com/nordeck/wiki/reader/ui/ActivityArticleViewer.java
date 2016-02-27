@@ -6,7 +6,6 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.support.v4.widget.DrawerLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
@@ -17,7 +16,6 @@ import com.nordeck.wiki.reader.SelectedWiki;
 import com.nordeck.wiki.reader.adapters.ContentViewerAdapter;
 import com.nordeck.wiki.reader.adapters.SectionNavAdapter;
 import com.nordeck.wiki.reader.adapters.base.NdDividerItemDecoration;
-import com.nordeck.wiki.reader.adapters.base.RecyclerItemClickSupport;
 import com.nordeck.wiki.reader.model.ArticleResponse;
 import com.nordeck.wiki.reader.model.IPage;
 import com.nordeck.wiki.reader.model.ISection;
@@ -35,8 +33,8 @@ import butterknife.ButterKnife;
  * <p/>
  * Created by parker on 9/4/15.
  */
-public class ActivityArticleViewer extends BaseActivity implements IArticleViewerView, RecyclerItemClickSupport
-        .OnItemClickListener, ContentViewerAdapter.OnClickRelatedArticleListener {
+public class ActivityArticleViewer extends BaseActivity implements IArticleViewerView, SectionNavAdapter
+        .OnItemClickListener<ISection>, ContentViewerAdapter.OnClickRelatedArticleListener {
 
     private static final String EXTRA_ARTICLE_ID = "extra_article_id";
 
@@ -93,8 +91,7 @@ public class ActivityArticleViewer extends BaseActivity implements IArticleViewe
         getRightDrawer().setLayoutManager(mNavLayoutManager);
         getRightDrawer().addItemDecoration(new NdDividerItemDecoration(this, NdDividerItemDecoration
                 .VERTICAL_LIST));
-        RecyclerItemClickSupport.addTo(getRightDrawer()).setOnItemClickListener(this);
-        mNavAdapter = new SectionNavAdapter(this);
+        mNavAdapter = new SectionNavAdapter(this, this);
         getRightDrawer().setAdapter(mNavAdapter);
 
         // Keep both lists in sync with each other
@@ -158,8 +155,8 @@ public class ActivityArticleViewer extends BaseActivity implements IArticleViewe
     }
 
     @Override
-    public boolean onItemClick(RecyclerView parent, View view, int position, long id) {
-        // move the content to the selection section
+    public void onItemClicked(@NonNull ISection item) {
+        int position = mNavAdapter.getPosition(item);
         mContentLayoutManager.scrollToPositionWithOffset(position, getResources().getDimensionPixelOffset(R.dimen
                 .padding));
         // Set the position on the adapter, then close the drawer so the user can read the new content, and center
@@ -168,7 +165,6 @@ public class ActivityArticleViewer extends BaseActivity implements IArticleViewe
         // TODO when closing the drawer the user can see the animation of the view moving
         mNavAdapter.setCurrentPosition(position);
         centerNavListOnSelectedPos(position);
-        return true;
     }
 
     @Override

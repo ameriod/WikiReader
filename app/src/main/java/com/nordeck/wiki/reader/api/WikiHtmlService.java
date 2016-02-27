@@ -2,6 +2,8 @@ package com.nordeck.wiki.reader.api;
 
 import android.support.annotation.NonNull;
 
+import com.nordeck.wiki.reader.model.ArticleResponse;
+
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
@@ -81,6 +83,11 @@ public class WikiHtmlService extends BaseService {
                 return htmlArticle;
             }
         };
+    }
+
+    public WikiHtmlService(String baseUrlPath, WikiSidebarWebService mWebService) {
+        super(baseUrlPath);
+        this.mWebService = mWebService;
     }
 
     /**

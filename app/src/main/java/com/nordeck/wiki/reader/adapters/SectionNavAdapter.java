@@ -1,6 +1,7 @@
 package com.nordeck.wiki.reader.adapters;
 
 import android.content.Context;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.RecyclerView;
@@ -24,8 +25,8 @@ public class SectionNavAdapter extends NdBaseRecyclerAdapter<ISection, SectionNa
 
     private RelatedResponse relatedResponse;
 
-    public SectionNavAdapter(Context context) {
-        super(context);
+    public SectionNavAdapter(@NonNull Context context, @Nullable OnItemClickListener<ISection> listener) {
+        super(context, listener);
     }
 
     @Override
@@ -36,7 +37,10 @@ public class SectionNavAdapter extends NdBaseRecyclerAdapter<ISection, SectionNa
 
     @Override
     public void onBindViewHolder(SectionNavHolder holder, int position) {
-        holder.tvName.setText(getItem(position).getTitle());
+        ISection section = getItem(position);
+        holder.itemView.setOnClickListener(this);
+        holder.itemView.setTag(section);
+        holder.tvName.setText(section.getTitle());
         holder.itemView.setSelected(position == mCurrentPosition);
         if (holder.itemView.isSelected()) {
             holder.itemView.setBackgroundColor(ContextCompat.getColor(context, R.color.section_nav_selected_color));

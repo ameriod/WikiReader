@@ -1,24 +1,33 @@
 package com.nordeck.wiki.reader.adapters.base;
 
 import android.content.Context;
+import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
+import android.view.View;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public abstract class NdBaseRecyclerAdapter<T, VH extends RecyclerView.ViewHolder> extends RecyclerView.Adapter<VH> {
-
-    private static final int LAST_POSITION = -1;
+public abstract class NdBaseRecyclerAdapter<T, VH extends RecyclerView.ViewHolder> extends RecyclerView.Adapter<VH>
+        implements View.OnClickListener {
 
     protected LayoutInflater inflater;
     protected Context context;
     protected ArrayList<T> items;
+    @Nullable
+    protected OnItemClickListener<T> listener;
 
-    public NdBaseRecyclerAdapter(Context context) {
+    public NdBaseRecyclerAdapter(@NonNull Context context, @Nullable OnItemClickListener listener) {
         this.context = context;
-        inflater = LayoutInflater.from(this.context);
-        items = new ArrayList<>();
+        this.inflater = LayoutInflater.from(this.context);
+        this.items = new ArrayList<>();
+        this.listener = listener;
+    }
+
+    public interface OnItemClickListener<T> {
+        void onItemClicked(@NonNull T item);
     }
 
     @Override
@@ -101,4 +110,25 @@ public abstract class NdBaseRecyclerAdapter<T, VH extends RecyclerView.ViewHolde
         }
     }
 
+    public int getPosition(@NonNull T item) {
+        if (items != null) {
+            for (int i = 0, size = items.size(); i < size; i++) {
+                T checkItem = items.get(i);
+                if (checkItem.equals(item)) {
+                    return i;
+                }
+            }
+        }
+        return 0;
+    }
+
+    @Override
+    public void onClick(View v) {
+        if (listener != null) {
+            Object obj = v.getTag();
+            if (obj != null) {
+                listener.onItemClicked((T) obj);
+            }
+        }
+    }
 }
