@@ -7,8 +7,8 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.nordeck.lib.core.NdUtils;
 import com.nordeck.wiki.reader.R;
-import com.nordeck.wiki.reader.Utils;
 import com.nordeck.wiki.reader.model.IPage;
 import com.squareup.picasso.Picasso;
 
@@ -28,9 +28,9 @@ class PageDetailViewHolder extends RecyclerView.ViewHolder {
         tvTitle.setText(page.getTitle());
         tvSummary.setText(page.getSummary());
         if (TextUtils.isEmpty(page.getImageUrl())) {
-            Utils.setViewVisibility(iv, false);
+            NdUtils.setViewVisibility(iv, false);
         } else {
-            Utils.setViewVisibility(iv, true);
+            NdUtils.setViewVisibility(iv, true);
             Picasso.with(context.getApplicationContext()).load(page.getImageUrl()).into(iv);
         }
     }

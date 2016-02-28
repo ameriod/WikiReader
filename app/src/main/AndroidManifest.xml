@@ -12,16 +12,16 @@
         android:label="@string/app_name"
         android:theme="@style/AppTheme">
         <activity
-            android:name=".ui.ActivityTopPages"/>
+            android:name=".ui.top.ActivityTopPages"/>
 
         <activity
-            android:name=".ui.ActivityArticleViewer"/>
+            android:name=".ui.viewer.ActivityArticleViewer"/>
 
         <activity
-            android:name=".ui.ActivitySearchPages"/>
+            android:name=".ui.search.ActivitySearchPages"/>
 
         <activity
-            android:name=".ui.ActivityWikis"/>
+            android:name=".ui.wiki.ActivityWikis"/>
 
         <activity android:name=".ui.ActivitySplash">
 

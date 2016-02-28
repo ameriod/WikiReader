@@ -2,7 +2,7 @@
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:paddingTop="@dimen/padding"
+            android:paddingTop="@dimen/nd_padding"
             android:orientation="vertical">
 
     <LinearLayout
@@ -10,8 +10,8 @@
         android:layout_height="wrap_content"
         android:clipToPadding="false"
         android:orientation="vertical"
-        android:paddingLeft="@dimen/padding_dialog_vertical"
-        android:paddingRight="@dimen/padding_dialog_vertical">
+        android:paddingLeft="@dimen/nd_padding_dialog_vertical"
+        android:paddingRight="@dimen/nd_padding_dialog_vertical">
 
         <ImageView
             android:id="@+id/wiki_iv_logo"

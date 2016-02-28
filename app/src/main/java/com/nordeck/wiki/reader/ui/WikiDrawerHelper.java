@@ -11,9 +11,9 @@ import android.support.v7.widget.RecyclerView;
 import android.view.MenuItem;
 import android.view.View;
 
+import com.nordeck.lib.core.adapter.NdDividerItemDecoration;
 import com.nordeck.wiki.reader.R;
 import com.nordeck.wiki.reader.adapters.WikiNavAdapter;
-import com.nordeck.wiki.reader.adapters.base.NdDividerItemDecoration;
 
 import java.util.ArrayList;
 import java.util.Arrays;

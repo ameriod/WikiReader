@@ -2,6 +2,7 @@ package com.nordeck.wiki.reader.api;
 
 import android.support.annotation.NonNull;
 
+import com.nordeck.lib.api.BaseService;
 import com.nordeck.wiki.reader.model.SearchResponse;
 
 import retrofit.RestAdapter;
@@ -41,7 +42,7 @@ public class SearchArticlesService extends BaseService {
      * @return
      */
     public Observable<SearchResponse> getSearchResults(@NonNull String query) {
-        return makeAsync(mService.fetchSearchResults(query, LIMIT, "10", 1));
+        return mService.fetchSearchResults(query, LIMIT, "10", 1);
     }
 
     /**
@@ -52,6 +53,6 @@ public class SearchArticlesService extends BaseService {
      * @return
      */
     public Observable<SearchResponse> getSearchResults(@NonNull String query, @NonNull int batch) {
-        return makeAsync(mService.fetchSearchResults(query, LIMIT, "10", batch));
+        return mService.fetchSearchResults(query, LIMIT, "10", batch);
     }
 }

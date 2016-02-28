@@ -1,10 +1,7 @@
 package com.nordeck.wiki.reader.api;
 
-import android.support.annotation.NonNull;
-
+import com.nordeck.lib.api.BaseService;
 import com.nordeck.wiki.reader.model.ArticleResponse;
-import com.nordeck.wiki.reader.model.Content;
-import com.nordeck.wiki.reader.model.Section;
 
 import retrofit.RestAdapter;
 import retrofit.http.GET;
@@ -42,11 +39,11 @@ public class ArticleService extends BaseService {
      * @param id
      * @return
      */
-    public Observable<ArticleResponse> getArticle(@NonNull String id) {
-        return makeAsync(getArticleNonAsync(id));
+    public Observable<ArticleResponse> getArticle(String id) {
+        return getArticleNonAsync(id);
     }
 
-    private Observable<ArticleResponse> getArticleNonAsync(@NonNull final String id) {
+    private Observable<ArticleResponse> getArticleNonAsync(final String id) {
         return mWebService.fetchArticle(id)
                 .map(new Func1<ArticleResponse, ArticleResponse>() {
                     @Override
@@ -65,13 +62,13 @@ public class ArticleService extends BaseService {
      * @return
      */
     public Observable<ArticleResponse> getRandomArticle() {
-        return makeAsync(new WikiHtmlService(getBaseUrlPath())
+        return new WikiHtmlService(getBaseUrlPath())
                 .getRandomPageId().flatMap(new Func1<String, Observable<ArticleResponse>>() {
                     @Override
                     public Observable<ArticleResponse> call(String s) {
                         return getArticleNonAsync(s);
                     }
-                }));
+                });
     }
 
 }

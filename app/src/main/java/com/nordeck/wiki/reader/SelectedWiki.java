@@ -23,12 +23,12 @@ public class SelectedWiki {
     }
 
     public SelectedWiki(Context context) {
-        selectedWiki = PreferenceUtils.getSelectedWiki(context.getApplicationContext());
+        selectedWiki = PreferenceUtils.newInstance(context).getSelectedWiki();
     }
 
-    public static void setSelectedWiki(@Nullable WikiDetail selectedWiki, Context context) {
+    public void setSelectedWiki(@Nullable WikiDetail selectedWiki, Context context) {
         SelectedWiki.selectedWiki = selectedWiki;
-        PreferenceUtils.setSelectedWiki(context.getApplicationContext(), selectedWiki);
+        PreferenceUtils.newInstance(context).setSelectedWiki(selectedWiki);
     }
 
     public WikiDetail getSelectedWiki() {

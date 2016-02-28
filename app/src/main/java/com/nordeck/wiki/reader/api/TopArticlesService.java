@@ -1,5 +1,6 @@
 package com.nordeck.wiki.reader.api;
 
+import com.nordeck.lib.api.BaseService;
 import com.nordeck.wiki.reader.model.PagesResponse;
 
 import retrofit.RestAdapter;
@@ -42,7 +43,7 @@ public class TopArticlesService extends BaseService {
      * @return
      */
     public Observable<PagesResponse> getTopArticles() {
-        return makeAsync(mWebService.fetchTopArticles(LIMIT));
+        return mWebService.fetchTopArticles(LIMIT);
     }
 
     /**
@@ -51,6 +52,6 @@ public class TopArticlesService extends BaseService {
      * @return
      */
     public Observable<PagesResponse> getTopArticlesExpanded() {
-        return makeAsync(mWebService.fetchTopArticlesExpanded("1", LIMIT));
+        return mWebService.fetchTopArticlesExpanded("1", LIMIT);
     }
 }

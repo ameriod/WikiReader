@@ -2,7 +2,7 @@ package com.nordeck.wiki.reader.api;
 
 import android.support.annotation.NonNull;
 
-import com.nordeck.wiki.reader.model.ArticleResponse;
+import com.nordeck.lib.api.BaseService;
 
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;

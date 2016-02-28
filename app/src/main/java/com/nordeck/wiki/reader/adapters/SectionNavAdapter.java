@@ -9,8 +9,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import com.nordeck.lib.core.adapter.NdBaseRecyclerAdapter;
 import com.nordeck.wiki.reader.R;
-import com.nordeck.wiki.reader.adapters.base.NdBaseRecyclerAdapter;
 import com.nordeck.wiki.reader.model.ISection;
 import com.nordeck.wiki.reader.model.RelatedResponse;
 import com.nordeck.wiki.reader.model.Section;

@@ -5,8 +5,8 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.view.ViewGroup;
 
+import com.nordeck.lib.core.adapter.NdBaseRecyclerAdapter;
 import com.nordeck.wiki.reader.R;
-import com.nordeck.wiki.reader.adapters.base.NdBaseRecyclerAdapter;
 import com.nordeck.wiki.reader.model.IPage;
 
 /**

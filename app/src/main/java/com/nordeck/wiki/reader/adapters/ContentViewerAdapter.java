@@ -15,16 +15,16 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.nordeck.lib.core.NdUtils;
+import com.nordeck.lib.core.adapter.NdBaseRecyclerAdapter;
 import com.nordeck.wiki.reader.R;
-import com.nordeck.wiki.reader.Utils;
-import com.nordeck.wiki.reader.adapters.base.NdBaseRecyclerAdapter;
 import com.nordeck.wiki.reader.model.IPage;
 import com.nordeck.wiki.reader.model.ISection;
 import com.nordeck.wiki.reader.model.Image;
 import com.nordeck.wiki.reader.model.PageRelated;
 import com.nordeck.wiki.reader.model.RelatedResponse;
 import com.nordeck.wiki.reader.model.Section;
-import com.nordeck.wiki.reader.views.HtmlTagHandler;
+import com.nordeck.wiki.reader.HtmlTagHandler;
 import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
@@ -85,28 +85,28 @@ public class ContentViewerAdapter extends NdBaseRecyclerAdapter<ISection, Recycl
 
             sectionHolder.tvTitle.setText(item.getTitle());
             // Some sections do not have titles
-            Utils.setViewVisibility(sectionHolder.tvTitle, !TextUtils.isEmpty(item.getTitle()));
+            NdUtils.setViewVisibility(sectionHolder.tvTitle, !TextUtils.isEmpty(item.getTitle()));
             if (item.isContentTitle()) {
                 // no content so hide the tv
-                Utils.setViewVisibility(sectionHolder.tvContent, false);
+                NdUtils.setViewVisibility(sectionHolder.tvContent, false);
             } else if (item.isContentParagraph()) {
                 sectionHolder.tvContent.setText(item.getParagraphStr());
-                Utils.setViewVisibility(sectionHolder.tvContent, true);
+                NdUtils.setViewVisibility(sectionHolder.tvContent, true);
             } else if (item.isContentList()) {
                 sectionHolder.tvContent.setText(getSpan(position, item.getListStr()));
-                Utils.setViewVisibility(sectionHolder.tvContent, true);
+                NdUtils.setViewVisibility(sectionHolder.tvContent, true);
             } else {
-                Utils.setViewVisibility(sectionHolder.tvContent, false);
+                NdUtils.setViewVisibility(sectionHolder.tvContent, false);
                 Timber.e("Unsupported content type section: " + item);
             }
 
             if (item.getImages() != null && item.getImages().size() > 0) {
                 addImagesToView(sectionHolder.containerImages, item.getImages());
-                Utils.setViewVisibility(sectionHolder.hsImages, true);
-                Utils.setViewVisibility(sectionHolder.containerImages, true);
+                NdUtils.setViewVisibility(sectionHolder.hsImages, true);
+                NdUtils.setViewVisibility(sectionHolder.containerImages, true);
             } else {
-                Utils.setViewVisibility(sectionHolder.containerImages, false);
-                Utils.setViewVisibility(sectionHolder.hsImages, false);
+                NdUtils.setViewVisibility(sectionHolder.containerImages, false);
+                NdUtils.setViewVisibility(sectionHolder.hsImages, false);
             }
         } else if (viewType == TYPE_RELATED) {
             IPage page = (IPage) iSection;
@@ -191,22 +191,22 @@ public class ContentViewerAdapter extends NdBaseRecyclerAdapter<ISection, Recycl
             diff = Math.abs(diff);
             for (int i = diff; i <= 0; i--) {
                 View v = container.getChildAt(i);
-                Utils.setViewVisibility(v, false);
+                NdUtils.setViewVisibility(v, false);
             }
         }
         for (int i = 0; i < imagesSize; i++) {
             Image image = imageList.get(i);
             ImageView iv = (ImageView) container.getChildAt(i);
             if (i == imagesSize - 1) {
-                // build in item padding will pad 8dps
+                // build in item nd_padding will pad 8dps
                 iv.setPadding(0, 0, 0, 0);
             } else {
-                iv.setPadding(0, 0, context.getResources().getDimensionPixelOffset(R.dimen.padding), 0);
+                iv.setPadding(0, 0, context.getResources().getDimensionPixelOffset(R.dimen.nd_padding), 0);
             }
             iv.setTag(image.getCaption());
             iv.setOnClickListener(this);
             Picasso.with(context.getApplicationContext()).load(image.getSrc()).into(iv);
-            Utils.setViewVisibility(iv, true);
+            NdUtils.setViewVisibility(iv, true);
         }
     }
 

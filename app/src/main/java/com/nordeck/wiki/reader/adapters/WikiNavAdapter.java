@@ -10,10 +10,10 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.nordeck.lib.core.NdUtils;
+import com.nordeck.lib.core.adapter.NdBaseRecyclerAdapter;
 import com.nordeck.wiki.reader.R;
 import com.nordeck.wiki.reader.SelectedWiki;
-import com.nordeck.wiki.reader.Utils;
-import com.nordeck.wiki.reader.adapters.base.NdBaseRecyclerAdapter;
 import com.nordeck.wiki.reader.model.WikiDetail;
 import com.squareup.picasso.Picasso;
 
@@ -54,9 +54,9 @@ public class WikiNavAdapter extends NdBaseRecyclerAdapter<String, RecyclerView.V
             headerHolder.tvName.setText(detail.getTitle());
             if (!TextUtils.isEmpty(detail.getImage())) {
                 Picasso.with(context.getApplicationContext()).load(detail.getImage()).into(headerHolder.ivLogo);
-                Utils.setViewVisibility(headerHolder.ivLogo, true);
+                NdUtils.setViewVisibility(headerHolder.ivLogo, true);
             } else {
-                Utils.setViewVisibility(headerHolder.ivLogo, false);
+                NdUtils.setViewVisibility(headerHolder.ivLogo, false);
             }
         } else {
             String item = getItem(position);

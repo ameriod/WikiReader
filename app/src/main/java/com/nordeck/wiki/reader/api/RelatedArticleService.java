@@ -3,6 +3,7 @@ package com.nordeck.wiki.reader.api;
 import android.support.annotation.NonNull;
 
 import com.google.gson.GsonBuilder;
+import com.nordeck.lib.api.BaseService;
 import com.nordeck.wiki.reader.model.RelatedResponse;
 
 import retrofit.RestAdapter;
@@ -44,6 +45,6 @@ public class RelatedArticleService extends BaseService {
 
 
     public Observable<RelatedResponse> getRelatedPages(@NonNull String id) {
-        return makeAsync(mWebService.fetchRelatedPages(id));
+        return mWebService.fetchRelatedPages(id);
     }
 }

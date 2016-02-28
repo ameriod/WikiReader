@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <dimen name="nd_default_touch_target_small">32dp</dimen>
+    <dimen name="nd_default_touch_target">48dp</dimen>
+    <dimen name="nd_default_touch_large">56dp</dimen>
+
+    <dimen name="nd_padding_tiny">2dp</dimen>
+    <dimen name="nd_padding_small">4dp</dimen>
+    <dimen name="nd_padding">8dp</dimen>
+    <dimen name="nd_padding_large">16dp</dimen>
+    <dimen name="nd_padding_xlarge">32dp</dimen>
+    <dimen name="nd_padding_dialog_vertical">24dp</dimen>
+
+    <!-- Default screen margins, per the Android Design guidelines. -->
+    <dimen name="nd_activity_horizontal_margin">16dp</dimen>
+    <dimen name="nd_activity_vertical_margin">16dp</dimen>
+
+</resources>

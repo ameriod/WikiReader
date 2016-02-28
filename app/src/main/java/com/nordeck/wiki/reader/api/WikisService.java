@@ -2,6 +2,7 @@ package com.nordeck.wiki.reader.api;
 
 import android.support.annotation.NonNull;
 
+import com.nordeck.lib.api.BaseService;
 import com.nordeck.wiki.reader.model.WikiResponse;
 
 import retrofit.RestAdapter;
@@ -41,10 +42,10 @@ public class WikisService extends BaseService {
     }
 
     public Observable<WikiResponse> getTopWikis() {
-        return makeAsync(mWebService.fetchTopWikis(LIMIT, 1));
+        return mWebService.fetchTopWikis(LIMIT, 1);
     }
 
     public Observable<WikiResponse> getWikisByQuery(@NonNull String query) {
-        return makeAsync(mWebService.fetchWikisByQuery(query, LIMIT, 1));
+        return mWebService.fetchWikisByQuery(query, LIMIT, 1);
     }
 }

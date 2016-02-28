@@ -3,6 +3,7 @@ package com.nordeck.wiki.reader.api;
 import android.support.annotation.NonNull;
 
 import com.google.gson.GsonBuilder;
+import com.nordeck.lib.api.BaseService;
 import com.nordeck.wiki.reader.model.WikiDetail;
 
 import retrofit.RestAdapter;
@@ -46,7 +47,7 @@ public class WikiDetailService extends BaseService {
 
 
     public Observable<WikiDetail> getWikiDetail(@NonNull String id) {
-        return makeAsync(mWebService.fetchWikiDetail(id));
+        return mWebService.fetchWikiDetail(id);
     }
 
 }

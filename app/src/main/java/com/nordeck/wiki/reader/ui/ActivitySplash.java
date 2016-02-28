@@ -4,6 +4,8 @@ import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 
 import com.nordeck.wiki.reader.SelectedWiki;
+import com.nordeck.wiki.reader.ui.top.ActivityTopPages;
+import com.nordeck.wiki.reader.ui.wiki.ActivityWikis;
 
 /**
  * Created by parker on 9/7/15.

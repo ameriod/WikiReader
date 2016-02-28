@@ -13,9 +13,12 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.Toast;
 
+import com.nordeck.lib.core.NdUtils;
+import com.nordeck.lib.core.mvp.NdView;
 import com.nordeck.wiki.reader.R;
-import com.nordeck.wiki.reader.Utils;
-import com.nordeck.wiki.reader.presenters.NdView;
+import com.nordeck.wiki.reader.ui.top.ActivityTopPages;
+import com.nordeck.wiki.reader.ui.viewer.ActivityArticleViewer;
+import com.nordeck.wiki.reader.ui.wiki.ActivityWikis;
 
 /**
  * Created by parker on 9/4/15.
@@ -106,7 +109,7 @@ public abstract class BaseActivity extends AppCompatActivity implements NdView, 
         if (TextUtils.equals(item, getString(R.string.nav_chose_new_wiki))) {
             ActivityWikis.launchActivity(this);
         } else if (TextUtils.equals(item, getString(R.string.nav_chose_random))) {
-            ActivityArticleViewer.launchActiviyRandom(this);
+            ActivityArticleViewer.launchActivityRandom(this);
         } else if (TextUtils.equals(item, getString(R.string.nav_chose_top))) {
             ActivityTopPages.launchActivity(this);
         }
@@ -114,7 +117,7 @@ public abstract class BaseActivity extends AppCompatActivity implements NdView, 
 
     @Override
     public void showProgressIndicator(boolean show) {
-        Utils.setViewVisibility(mLoading, show);
+        NdUtils.setViewVisibility(mLoading, show);
     }
 
     @Override

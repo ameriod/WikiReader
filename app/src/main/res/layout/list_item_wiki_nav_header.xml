@@ -19,7 +19,7 @@
         android:layout_alignBottom="@+id/list_item_wiki_nav_iv"
         android:layout_gravity="center"
         android:background="@color/background_text_on_pic"
-        android:padding="@dimen/padding"
+        android:padding="@dimen/nd_padding"
         android:textAppearance="@style/TextAppearance.AppCompat.Body2"
         android:textColor="@android:color/white"
         tools:text="Fallout Wiki"/>
